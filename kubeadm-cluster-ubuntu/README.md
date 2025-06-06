@@ -10,6 +10,7 @@ Sets up a single node Kubernetes cluster with [kubeadm](https://kubernetes.io/do
 * Creates a default containerd configuration file and applies modifications
 * Installs kubeadm, kubelet and kubectl from k8s.io
 * Installs Calico as the CNI and properly demonstrates configuring the pod network cidr in the Calico CNI plugin
+* Installs nginx-ingress controller to the cluster
 * Supplies a script for resetting the cluster installation and CNI for troubleshooting
 
 ## Caveats
