@@ -80,6 +80,9 @@ curl -L https://github.com/projectcalico/calico/releases/download/$CALICO_VERSIO
 chmod +x ./calicoctl
 popd
 
+# Install Flannel
+#kubectl apply -f https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml
+
 # Setup kubeconfig in current user's home directory, warning this overrites user's ~/.kube/config
 # Sets SUDO_USER to root if this script was not run with sudo
 SUDO_USER=${SUDO_USER:-$USER}
