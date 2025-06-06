@@ -35,8 +35,7 @@ mkdir -p /etc/containerd
 containerd config default > /etc/containerd/config.toml
 # Adjust the group Cgroup driver to systemd that is used for processes started by its runtime (e.g. runc)
 sed -i 's/SystemdCgroup \+= false/SystemdCgroup = true/g' /etc/containerd/config.toml
-#TODO - fix or remove
-#sed -i '/s/sandbox_image \+=$" sandbox_image = \"registry\.k8s\.io/pause\:3\.10/'  's/SystemdCgroup \+= false/SystemdCgroup = true/g' /etc/containerd/config.toml
+sed -i 's/sandbox_image \+=.*$/sandbox_image = \"registry\.k8s\.io\/pause\:3\.10\/\"/g' /etc/containerd/config.toml
 systemctl restart containerd
 
 # Install kubelet, kubeadm, and kubectl from k8s.io deb repos.
