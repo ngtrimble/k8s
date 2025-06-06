@@ -5,7 +5,7 @@
 # * Uses https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm as a guide.
 # * Not intended for actual use but for learning and experimentation with "Vanilla" Kubernetes.
 # 
-# * To re-run this script and re-create the K8S cluster, first execute `sudo kubeadm reset`
+# * To re-create the K8S cluster, execute `sudo ./reset-cluster`. After a reboot, run, 'sudo ./create-cluster.sh' again.
 set -e
 
 if [[ $EUID -ne 0 ]]; then
