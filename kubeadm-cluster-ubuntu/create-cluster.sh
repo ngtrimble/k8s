@@ -15,6 +15,7 @@ fi
 
 K8S_VERSION=v1.33
 CALICO_VERSION=v3.30.1
+NGINX_INGRESS_VERSION=v1.12.3
 POD_NETWORK_CIDR=10.244.0.0/16
 
 apt-get update 
@@ -78,6 +79,9 @@ pushd /usr/local/bin
 curl -L https://github.com/projectcalico/calico/releases/download/$CALICO_VERSION/calicoctl-linux-amd64 -o calicoctl
 chmod +x ./calicoctl
 popd
+
+# Install the latest ingress-nginx controller
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-$NGINX_INGRESS_VERSION/deploy/static/provider/baremetal/deploy.yaml
 
 # Setup kubeconfig in current user's home directory, warning this overrites user's ~/.kube/config
 # Sets SUDO_USER to root if this script was not run with sudo
