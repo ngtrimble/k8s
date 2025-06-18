@@ -2,10 +2,10 @@
 # 
 # Creates a kubernetes cluster using kubeadm on Ubuntu. Last tested on Ubuntu 24.04. 
 #
-# * Uses https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm as a guide.
-# * Not intended for actual use but for learning and experimentation with "Vanilla" Kubernetes.
+# Uses https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm as a guide.
+# Not intended for production use, but for learning and experimentation with "Vanilla" Kubernetes.
 # 
-# * To re-create the K8S cluster, execute `sudo ./reset-cluster`. After a reboot, run, 'sudo ./create-cluster.sh' again.
+# To re-create the K8S cluster, execute `sudo ./reset-cluster`. After a reboot, run, 'sudo ./create-cluster.sh' again.
 set -e
 
 if [[ $EUID -ne 0 ]]; then
@@ -16,7 +16,10 @@ fi
 K8S_VERSION=v1.33
 CALICO_VERSION=v3.30.1
 NGINX_INGRESS_VERSION=v1.12.3
+METALLB_VERSION=v0.15.2
 POD_NETWORK_CIDR=10.244.0.0/16
+METALLB_IPADDRESSPOOL=10.244.1.0/24
+NGINX_LB_IP=10.244.1.1
 
 apt-get update 
 apt-get install -y containerd apt-transport-https ca-certificates curl gpg
@@ -79,6 +82,45 @@ pushd /usr/local/bin
 curl -L https://github.com/projectcalico/calico/releases/download/$CALICO_VERSION/calicoctl-linux-amd64 -o calicoctl
 chmod +x ./calicoctl
 popd
+
+# Install MetalLB
+kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/$METALLB_VERSION/config/manifests/metallb-native.yaml
+
+# Configure MetalLB IPAddressPool and create a LoadBalancer using MetalLB intended for use by ingress-nginx.
+METALLB_CONFIGURATION=$(
+cat << EOF
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: metallb-pool
+  namespace: metallb-system
+spec:
+  addresses:
+  - $METALLB_IPADDRESSPOOL
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ingress
+  namespace: ingress
+spec:
+  selector:
+    name: nginx-ingress-microk8s
+  type: LoadBalancer
+  loadBalancerIP: $NGINX_LB_IP 
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 80
+    - name: https
+      protocol: TCP
+      port: 443
+      targetPort: 443
+EOF
+)
+echo "$METALLB_CONFIGURATION" | kubectl apply -f -
+
 
 # Install the latest ingress-nginx controller
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-$NGINX_INGRESS_VERSION/deploy/static/provider/baremetal/deploy.yaml
