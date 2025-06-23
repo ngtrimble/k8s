@@ -38,6 +38,8 @@ mkdir -p $HOME/.kube
 sudo microk8s.kubectl config view --raw > $HOME/.kube/config
 sudo chown -R $USER:$USER $HOME/.kube 
 
+microk8s enable dns
+microk8s enable cert-manager
 microk8s enable metallb:$METALLB_IPADDRESSPOOL
 microk8s enable ingress
 
@@ -66,3 +68,5 @@ EOF
 )
 
 echo "$NGINX_LB_DEFINITION" | kubectl apply -f -
+
+microk8s enable hostpath-storage
