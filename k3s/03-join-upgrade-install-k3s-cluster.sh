@@ -10,13 +10,17 @@ $0 [-u] [-h]
         -a - k3s agent arguments
 
         -h - Help or usage
+
+	-s - k3s server URL (e.g. https://hostname_or_ip:6443)
+
+	-t - k3s server token
 EOF
 exit 1
 }
 
 # These are default args for a k3s configuration that works with MetalLB on bare-metal installations
 K3S_AGENT_ARGS="--kube-proxy-arg proxy-mode=ipvs --kube-proxy-arg ipvs-strict-arp"
-while getopts "a:hu" opt; do
+while getopts "a:hut:s:" opt; do
         case $opt in
                 a)
                 K3S_AGENT_ARGS="$OPTARG"
@@ -27,44 +31,33 @@ while getopts "a:hu" opt; do
                 h)
                 usage
                 ;;
+		t)
+		K3S_TOKEN="$OPTARG"
+		;;
+		s)
+		K3S_SERVER="$OPTARG"
+		;;
                 *)
                 usage
                 ;;
         esac
 done
 
+if [[ -z $K3S_SERVER ]]; then
+	usage
+fi
+
+if [[ -z $K3S_TOKEN ]]; then
+	usage
+fi
+
 if [[ -f "/usr/local/bin/k3s-agent-uninstall.sh" && $UNINSTALL ]]; then
         read -p "This will uninstall k3s before installing it. Are you sure y/n?" CONFIRM
         if [[ $CONFIRM == y ]]; then
-                /usr/local/bin/k3s-uninstall.sh
+                /usr/local/bin/k3s-agent-uninstall.sh
         else
                 usage
         fi
 fi
 
-curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="server $K3S_SERVER_ARGS" sh -s -
-
-
-
-#!/usr/bin/env bash
-set -e
-
-usage() {
-	echo "Usage: $0 K3S_TOKEN K3S_SERVER"
-	exit 1
-}
-
-
-if [[ -z "$1" ]]; then
-	usage
-fi
-
-if [[ -z "$2" ]]; then
-	usage
-fi
-
-K3S_TOKEN=$1
-K3S_SERVER=$2
-
-curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="agent" K3S_TOKEN=$K3S_TOKEN sh -s - --server=$K3S_SERVER
-
+curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="agent $K3S_AGENT_ARGS --server=$K3S_SERVER --token $K3S_TOKEN" sh -s - 
