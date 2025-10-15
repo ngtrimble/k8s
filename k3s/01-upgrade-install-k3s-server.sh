@@ -14,7 +14,8 @@ EOF
 exit 1
 }
 
-K3S_SERVER_ARGS="--disable=traefik --disable=servicelb"
+# These are default args for a k3s configuration that works with MetalLB on bare-metal installations
+K3S_SERVER_ARGS="--disable=traefik --disable=servicelb --kube-proxy-arg proxy-mode=ipvs --kube-proxy-arg ipvs-strict-arp"
 while getopts "a:hu" opt; do
 	case $opt in
 		a)
