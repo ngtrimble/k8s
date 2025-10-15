@@ -38,7 +38,7 @@ spec:
   - external-lan-pool
   nodeSelectors:
   - matchLabels:
-      kubernetes.io/hostname: k3s-01
+      l2.advertised.metallb: "true"
 EOF
 
 # Install ingress-nginx configured with a LoadBalancer provided by MetalLB
