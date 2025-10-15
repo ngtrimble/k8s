@@ -11,7 +11,7 @@ NGINX_INGRESS_VERSION="v1.13.3"
 helm repo add metallb https://metallb.github.io/metallb
 helm repo update
 sudo helm upgrade metallb metallb/metallb \
-	--install --namespace metallb-system --create-namespace --set loadBalancerClass=metallb.universe.tf/metallb
+	--install --namespace metallb-system --create-namespace
 
 sudo kubectl rollout status deployment/metallb-controller -n metallb-system
 
@@ -48,5 +48,4 @@ sudo helm upgrade ingress-nginx ingress-nginx/ingress-nginx \
 	--install --create-namespace --namespace ingress-nginx \
 	--set controller.service.type=LoadBalancer \
 	--set controller.service.loadBalancerIP=$NGINX_LB_IP \
-	--set controller.service.LoadBalancerClass=metallb.universe.tf/metallb
 
