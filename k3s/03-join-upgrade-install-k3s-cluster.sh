@@ -5,11 +5,11 @@ usage() {
 cat << EOF
 $0 [-u] [-h]
 
-        -u - Uninstall k3s completely before installation or upgrade
+	-u - Uninstall k3s completely before installation or upgrade
 
-        -a - k3s agent arguments
+	-a - k3s agent arguments
 
-        -h - Help or usage
+	-h - Help or usage
 
 	-s - k3s server URL (e.g. https://hostname_or_ip:6443)
 
@@ -31,12 +31,12 @@ while getopts "a:hut:s:" opt; do
                 h)
                 usage
                 ;;
-		t)
-		K3S_TOKEN="$OPTARG"
-		;;
-		s)
-		K3S_SERVER="$OPTARG"
-		;;
+				t)
+				K3S_TOKEN="$OPTARG"
+				;;
+				s)
+				K3S_SERVER="$OPTARG"
+				;;
                 *)
                 usage
                 ;;
