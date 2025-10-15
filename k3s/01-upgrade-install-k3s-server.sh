@@ -48,5 +48,19 @@ sudo mkdir -p /root/.kube
 sudo cp /etc/rancher/k3s/k3s.yaml /root/.kube/config
 sudo chmod 644 /root/.kube/config
 
-echo "Your k3s join token is: $(sudo cat /var/lib/rancher/k3s/server/node-token)"
+# Copy k3s config to $HOME
+mkdir -p $HOME/.kube
+sudo cp /etc/rancher/k3s/k3s.yaml $HOME/.kube/config
+sudo chown $USER:$USER $HOME/.kube/config
+sudo chmod 644 $HOME/.kube/config
+
+cat << EOF
+To use kubectl from the k3s distribution, set KUBECONFIG in your environment. Run:
+
+printf "\nexport KUBECONFIG=~/.kube/config\n" >> ~/.profile
+
+Your k3s join token is: 
+
+$(sudo cat /var/lib/rancher/k3s/server/node-token)
+EOF
 
