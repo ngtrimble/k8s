@@ -6,39 +6,39 @@ Bare-Metal servers.
 ## Deployment steps
 
 1. Clone the repository on two or more machines.
-  
-  ```shell
-  git clone https://github.com/ngtrimble/k8s.git
-  ```
-  
+    
+    ```shell
+    git clone https://github.com/ngtrimble/k8s.git
+    ```
+    
 1. On server #1, run:
-  
-  ```shell
-  ./01-upgrade-install-k3s-server.sh -u
-  ```
-  
+    
+    ```shell
+    ./01-upgrade-install-k3s-server.sh -u
+    ```
+    
 1. On server #1,
-  
-  Update the variables below in 02-install-metallb-ingress-nginx.sh for your network.
-  
-  METALLB_IPADDRESSPOOL=192.168.68.20/32
-  NGINX_LB_IP=192.168.68.20
-  
-  Run:
-  
-  ```shell
-  ./02-install-metallb-ingress-nginx.sh
-  ```
-  
+    
+    Update the variables below in 02-install-metallb-ingress-nginx.sh for your network.
+    
+    METALLB_IPADDRESSPOOL=192.168.68.20/32
+    NGINX_LB_IP=192.168.68.20
+    
+    Run:
+    
+    ```shell
+    ./02-install-metallb-ingress-nginx.sh
+    ```
+    
 1. On server #2, run:
-  
-  ```shell
-  ./03-join-upgrade-install-k3s-cluster.sh
-  ```
-  
+    
+    ```shell
+    ./03-join-upgrade-install-k3s-cluster.sh
+    ```
+    
 1. On server #1, run:
-  
-  ```shell
-  ./04-create-test-app.sh
-  ```
-  
+    
+    ```shell
+    ./04-create-test-app.sh
+    ```
+    
