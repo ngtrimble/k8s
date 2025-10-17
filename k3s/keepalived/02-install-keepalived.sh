@@ -3,9 +3,11 @@ set -e -o pipefail
 
 usage() {
 cat << EOF
-$0 [-h]
-
+$0 [-h] [-l LOADBALANCER_IP_MASK]
+	
 	-h - Help or usage
+
+	-l - Loadbalancer IP address and subnet mask in format IP_ADDRESS/MASK (e.g. 192.168.1.10/24)
 EOF
 exit 1
 }
@@ -16,13 +18,27 @@ while getopts "hl:" opt; do
 		h)
 		usage
 		;;
+		l)
+		LOADBALANCER_IP_MASK="$OPTARG"
+		;;
 		*)
 		usage
 		;;
 	esac
 done
 
+if [[ -z "$LOADBALANCER_IP_MASK" ]]; then
+	usage
+fi
+
 sudo apt update && sudo apt install keepalived -y
+
+cat << EOF | sudo tee /etc/default/keepalived
+# Options to pass to keepalived
+
+# DAEMON_ARGS are appended to the keepalived command-line
+DAEMON_ARGS="-l -D --dont-fork"
+EOF
 
 cat << EOF | sudo tee /etc/sysctl.d/99-ipv4-ip-forward.conf > /dev/null
 # Needed for keepalived
@@ -45,11 +61,10 @@ vrrp_instance VI_1 {
 	      auth_pass 12345
 	}
 	virtual_ipaddress {
-	      192.168.68.21/22
+	     $LOADBALANCER_IP_MASK 
 	}
 }
 EOF
 
-sudo systemctl stop keepalived
-sudo systemctl start keepalived
 sudo systemctl enable keepalived
+sudo systemctl restart keepalived

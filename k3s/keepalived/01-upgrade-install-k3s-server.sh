@@ -13,7 +13,6 @@ exit 1
 }
 
 # These are default args for a k3s configuration that works with MetalLB on bare-metal installations
-K3S_SERVER_ARGS=""
 while getopts "hu" opt; do
 	case $opt in
 		u) 
@@ -37,7 +36,7 @@ if [[ -f "/usr/local/bin/k3s-uninstall.sh" && $UNINSTALL ]]; then
 	fi
 fi
 
-curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="server $K3S_SERVER_ARGS" sh -s -
+curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="server" sh -s -
 
 # Copy k3s config to /root's $HOME.
 sudo mkdir -p /root/.kube
