@@ -1,0 +1,57 @@
+#cloud-config
+# This is a combined cloud-init and Ubuntu autoinstall config.
+# It performs an unattended install and enables SSH for the `ubuntu` user.
+
+autoinstall:
+  version: 1
+  identity:
+    hostname: ubuntu-autoinstall
+    username: ubuntu
+    password: "$6$rounds=100000$RwOo97CtimTYlK0u$KkmMhZ/NGoun.88dUFQTOveEFZHKLgOzzycDrDcPHfGhdUKwMtPBjE7vQmH43pqJqYE0VvB4cGqmlsV02gfcS1" # replace with hashed password
+    ssh:
+      install-server: yes
+
+  locale: en_US
+  keyboard:
+    layout: us
+
+  network:
+    network:
+      version: 2
+      ethernets:
+        enp0s3:
+          dhcp4: true
+
+  storage:
+    layout:
+      name: direct
+
+  packages:
+    - cloud-init
+
+  late-commands:
+    - curtin in-target --target=/target -- sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin no/' /etc/ssh/sshd_config || true
+    - curtin in-target --target=/target -- systemctl enable ssh
+
+# Standard cloud-init top-level keys for ssh-authorized-keys and users
+users:
+  - name: ubuntu
+    gecos: Ubuntu User
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    shell: /bin/bash
+    lock-passwd: false
+    passwd: "$6$rounds=100000$RwOo97CtimTYlK0u$KkmMhZ/NGoun.88dUFQTOveEFZHKLgOzzycDrDcPHfGhdUKwMtPBjE7vQmH43pqJqYE0VvB4cGqmlsV02gfcS1" # same as above
+    # ssh_authorized_keys:
+    #   - ssh-rsa AAAA... your-public-key-here
+
+ssh_pwauth: true
+
+# Ensure cloud-init will run the autoinstall
+cloud_init_modules:
+  - migrator
+  - set-passwords
+  - ssh
+  - locale
+
+# final cleanups
+manage_etc_hosts: true
