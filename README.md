@@ -33,7 +33,9 @@ topics:
 
 * 01-proxmox/01-packer is untested and unfinished
 
-* 01/-proxmox/02-terraform creates a VM but does not automate installaton, add an option to simply clone a template that is manually curated
+* 01-proxmox/02-terraform/k3s-cluster creates a VM but does not automate installaton of k3s
+
+* 04-k3s/
 
 ## TODO
 

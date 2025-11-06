@@ -11,7 +11,6 @@ curl https://kube-vip.io/manifests/rbac.yaml > /var/lib/rancher/k3s/server/manif
 
 sudo kubectl apply -f https://raw.githubusercontent.com/kube-vip/kube-vip-cloud-provider/main/manifest/kube-vip-cloud-controller.yaml
 
-
 sudo kubectl apply -f https://raw.githubusercontent.com/kube-vip/kube-vip-cloud-provider/main/manifest/kube-vip-cloud-controller.yaml
 sudo kubectl create configmap -n kube-system kubevip --from-literal cidr-global=$VIP_CIDR
 
@@ -37,5 +36,3 @@ spec:
       port: 443
       targetPort: 443
 EOF
-
-

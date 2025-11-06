@@ -23,6 +23,11 @@ variable "clone_from" {
   default = ""
 }
 
+variable "clone_id" {
+  type = number
+  default = -1
+}
+
 variable "sshkeys" {
   type = string
   default = ""

@@ -26,9 +26,10 @@ module "vm" {
   cores = 2
   memory = 2048
   disk_size = "32G"
-  storage = var.storage
-  net_bridge = "vmbr0"
-  sshkeys = var.sshkeys
-  iso = var.iso
+  # storage = var.storage
+  # net_bridge = "vmbr0"
+  # sshkeys = var.sshkeys
+  # clone_from = var.clone_from
+  clone_id = var.clone_id
   target_node = var.target_node
 }

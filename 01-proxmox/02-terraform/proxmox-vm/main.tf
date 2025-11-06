@@ -9,18 +9,20 @@ terraform {
 
 resource "proxmox_vm_qemu" "vm" {
   name   = var.name
-  memory = var.memory
-  scsihw = "virtio-scsi-single"
+  # memory = var.memory
+  # scsihw = "virtio-scsi-single"
   target_node = var.target_node
-  boot = "order=scsi0"
-  clone = var.clone_from
+  #boot = "scsi0,ide2,net0"
+  #clone = var.clone_from
+  clone_id = var.clone_id
   full_clone = true
+  agent = 1
   
-  cpu {
-    cores = var.cores
-    sockets = var.sockets
-    type = var.cpu_type
-  }
+  # cpu {
+  #   cores = var.cores
+  #   sockets = var.sockets
+  #   type = var.cpu_type
+  # }
 
   disks {
     scsi {
@@ -32,14 +34,12 @@ resource "proxmox_vm_qemu" "vm" {
         }
       }
     }
-    # TODO - make clone mutually exclusive with cdrom & iso
-    # ide {
-    #   ide2 {
-    #     cdrom {
-    #       iso = var.iso
-    #     }
-    #   }
-    # }
+    ide {
+      ide2 {
+        cdrom {
+        }
+      }
+    }
   }
 
   network {
@@ -49,19 +49,19 @@ resource "proxmox_vm_qemu" "vm" {
     tag = var.net_vlan
   }
 
-  sshkeys = var.sshkeys
+  #sshkeys = var.sshkeys
 
-  # TODO - revisit cloudinit options
   # cloudinit = var.cloudinit ? {
   #   user = var.cloudinit_user
   #   password = var.cloudinit_password
   #   ipconfig0 = var.cloudinit_ipconfig0
-  #   searchdomain = var.cloudinit_searchdomain
-  #   nameserver = var.cloudinit_nameserver
-  #   dns = var.cloudinit_nameserver
+  #   # searchdomain = var.cloudinit_searchdomain
+  #   # nameserver = var.cloudinit_nameserver
+  #   # dns = var.cloudinit_nameserver
   # } : null
 
-  lifecycle {
-    ignore_changes = [sshkeys]
-  }
+
+  # lifecycle {
+  #   ignore_changes = [sshkeys]
+  # }
 }
