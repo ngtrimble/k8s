@@ -10,15 +10,9 @@ variable "name" {
 }
 
 variable "clone_from" {
-  description = "VM/template ID to clone from; set to null to create blank"
+  description = "VM/template to clone from"
   type = string
   default = ""
-}
-
-variable "full_clone" {
-  description = "Whether to perform a full clone"
-  type = bool
-  default = true
 }
 
 variable "cores" {
@@ -122,4 +116,10 @@ variable "cloudinit_nameserver" {
 variable "iso" {
   type = string
   default = ""
+}
+
+variable "cpu_type" {
+  type = string
+  default = "host"
+  description = "Sets the CPU type for this VM. The default is host as it is the most perfomant, although least compatible in more complex environments."
 }

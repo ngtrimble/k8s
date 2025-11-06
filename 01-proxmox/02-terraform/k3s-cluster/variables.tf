@@ -14,7 +14,9 @@ variable "pm_password" {
   sensitive = true
 }
 
-variable "name" { type = string }
+variable "name" { 
+  type = string
+}
 
 variable "clone_from" {
   type = string

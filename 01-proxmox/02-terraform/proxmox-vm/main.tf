@@ -12,11 +12,14 @@ resource "proxmox_vm_qemu" "vm" {
   memory = var.memory
   scsihw = "virtio-scsi-single"
   target_node = var.target_node
-  boot = "order=scsi0;ide2"
+  boot = "order=scsi0"
+  clone = var.clone_from
+  full_clone = true
   
   cpu {
     cores = var.cores
     sockets = var.sockets
+    type = var.cpu_type
   }
 
   disks {
@@ -29,13 +32,14 @@ resource "proxmox_vm_qemu" "vm" {
         }
       }
     }
-    ide {
-      ide2 {
-        cdrom {
-          iso = var.iso
-        }
-      }
-    }
+    # TODO - make clone mutually exclusive with cdrom & iso
+    # ide {
+    #   ide2 {
+    #     cdrom {
+    #       iso = var.iso
+    #     }
+    #   }
+    # }
   }
 
   network {
@@ -47,6 +51,7 @@ resource "proxmox_vm_qemu" "vm" {
 
   sshkeys = var.sshkeys
 
+  # TODO - revisit cloudinit options
   # cloudinit = var.cloudinit ? {
   #   user = var.cloudinit_user
   #   password = var.cloudinit_password

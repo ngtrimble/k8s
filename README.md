@@ -29,14 +29,14 @@ topics:
 
 06 - Kubernetes Inception where things get weird and Kubernetes is used to manage Kubernetes. See also 03.
 
-# Status
+## Status
 
+* 01-proxmox/01-packer is untested and unfinished
 
+* 01/-proxmox/02-terraform creates a VM but does not automate installaton, add an option to simply clone a template that is manually curated
 
-# TODO
+## TODO
 
-[ ] 01-proxmox/01-packer is untested and unfinished
-
-[ ] 02-terraform creates a vm but does not automate installaton, add an option to simply clone a template that is manually curated
+[ ] 
 
 [ ] 
