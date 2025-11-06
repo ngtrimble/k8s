@@ -39,6 +39,5 @@ topics:
 
 ## TODO
 
-[ ] 
+[ ] Figure out why hostname is not being set with cloud-init
 
-[ ] 
