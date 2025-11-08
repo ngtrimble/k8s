@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+if [[ "$OSTYPE" != "darwin"* ]]; then
+    printf "Exiting, script compatible with macos only.\n"
+    exit 1
+fi
+
+brew tap hashicorp/tap
+brew install hashicorp/tap/packer
+brew install hashicorp/tap/terraform

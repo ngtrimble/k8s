@@ -9,7 +9,7 @@ terraform {
 
 resource "proxmox_vm_qemu" "vm" {
   name   = var.name
-  # memory = var.memory
+  memory = var.memory
   # scsihw = "virtio-scsi-single"
   target_node = var.target_node
   #boot = "scsi0,ide2,net0"
