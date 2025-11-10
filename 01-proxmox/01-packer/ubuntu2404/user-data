@@ -1,0 +1,33 @@
+autoinstall:
+  version: 1
+  locale: en_US
+  identity:
+    hostname: ubuntu
+    username: ubuntu
+    # Generated wtih: "mkpasswd -m sha-512 changeme4realz"
+    password '$6$DnjPVGCQ3fAFicY1$pY8W93ptiEFMTyJ17.rus9PxJ4EcYOLi1o9jqN1ujz12PXnpxvFk.Yt1aj2Hph7A0ll4gp/sTDjlyxNvnG/VM1'
+  keyboard:
+    layout: us
+  storage:
+    layout:
+      name: lvm
+  network:
+    version: 2
+    ethernets:
+      all-en:
+        dhcp4: true
+        match: 
+          name: en*
+      all-eth:
+        dhcp4: true
+        match: 
+          name: eth*
+  ssh:
+    install-server: yes
+    allow-pw: yes
+  user-data:
+    disable_root: false
+  packages:
+    - qemu-guest-agent
+  late-commands:
+    - echo 'ubuntu ALL=(ALL) NOPASSWD:ALL' > /target/etc/sudoers.d/ubuntu

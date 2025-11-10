@@ -10,19 +10,23 @@ terraform {
 resource "proxmox_vm_qemu" "vm" {
   name   = var.name
   memory = var.memory
-  # scsihw = "virtio-scsi-single"
+  scsihw = var.scsihw
   target_node = var.target_node
-  #boot = "scsi0,ide2,net0"
-  #clone = var.clone_from
-  clone_id = var.clone_id
+  boot = "order=virtio0;net0"
+  clone = var.clone_from
   full_clone = true
   agent = 1
-  
-  # cpu {
-  #   cores = var.cores
-  #   sockets = var.sockets
-  #   type = var.cpu_type
-  # }
+  onboot = true
+  ciuser = var.ciuser
+  cipassword = var.cipassword
+  ciupgrade = true
+  sshkeys = var.sshkeys
+
+  cpu {
+    cores = var.cpu_cores
+    sockets = var.cpu_sockets
+    type = var.cpu_type
+  }
 
   disks {
     scsi {
@@ -34,12 +38,6 @@ resource "proxmox_vm_qemu" "vm" {
         }
       }
     }
-    ide {
-      ide2 {
-        cdrom {
-        }
-      }
-    }
   }
 
   network {
@@ -48,20 +46,4 @@ resource "proxmox_vm_qemu" "vm" {
     bridge = var.net_bridge
     tag = var.net_vlan
   }
-
-  #sshkeys = var.sshkeys
-
-  # cloudinit = var.cloudinit ? {
-  #   user = var.cloudinit_user
-  #   password = var.cloudinit_password
-  #   ipconfig0 = var.cloudinit_ipconfig0
-  #   # searchdomain = var.cloudinit_searchdomain
-  #   # nameserver = var.cloudinit_nameserver
-  #   # dns = var.cloudinit_nameserver
-  # } : null
-
-
-  # lifecycle {
-  #   ignore_changes = [sshkeys]
-  # }
 }

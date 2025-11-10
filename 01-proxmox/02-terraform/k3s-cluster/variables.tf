@@ -38,11 +38,6 @@ variable "node_count" {
   default = 1
 }
 
-variable "iso" {
-  type = string
-  default = ""
-}
-
 variable "target_node" { 
   type = string 
   default = ""
@@ -51,4 +46,20 @@ variable "target_node" {
 variable "storage" {
   type = string
   default = "local-lvm"
+}
+
+variable "cpu_cores" {
+  type = number
+  default = 2
+}
+
+variable "memory" {
+  type = number
+  default = 4096
+}
+
+variable "disk_size" {
+  description = "Disk size in GiB"
+  type = string
+  default = "32G"
 }

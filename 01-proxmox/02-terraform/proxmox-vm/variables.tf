@@ -15,29 +15,29 @@ variable "clone_from" {
   default = ""
 }
 
-variable "clone_id" {
-  type = number
-  default = -1
-}
-
-variable "cores" {
+variable "cpu_cores" {
   type = number
   default = 2
 }
 
-variable "sockets" {
+variable "cpu_sockets" {
   type = number
   default = 1
 }
 
+variable "cpu_type" {
+  type = string
+  default = "host"
+}
+
 variable "memory" {
   type = number
-  default = 2048
+  default = 4096
 }
 
 variable "scsihw" {
   type = string
-  default = "virtio-scsi-pci"
+  default = "virtio-scsi-single"
 }
 
 variable "disk_size" {
@@ -54,11 +54,6 @@ variable "disk_type" {
 variable "storage" {
   type = string
   default = "local-lvm"
-}
-
-variable "storage_type" {
-  type = string
-  default = "lvm"
 }
 
 variable "disk_iothread" {
@@ -86,45 +81,13 @@ variable "sshkeys" {
   default = ""
 }
 
-variable "cloudinit" {
-  description = "Enable simple cloud-init configuration"
-  type = bool
-  default = true
-}
-
-variable "cloudinit_user" {
+variable "ciuser" {
   type = string
-  default = "ubuntu"
+  default = "pve-user"
 }
 
-variable "cloudinit_password" {
+variable "cipassword" {
   type = string
   sensitive = true
-  default = ""
-}
-
-variable "cloudinit_ipconfig0" {
-  type = string
-  default = ""
-}
-
-variable "cloudinit_searchdomain" {
-  type = string
-  default = ""
-}
-
-variable "cloudinit_nameserver" {
-  type = string
-  default = ""
-}
-
-variable "iso" {
-  type = string
-  default = ""
-}
-
-variable "cpu_type" {
-  type = string
-  default = "host"
-  description = "Sets the CPU type for this VM. The default is host as it is the most perfomant, although least compatible in more complex environments."
+  default = "changeme"
 }

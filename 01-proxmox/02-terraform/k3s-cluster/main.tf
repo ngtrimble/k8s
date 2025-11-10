@@ -23,13 +23,9 @@ module "vm" {
   
   count = var.node_count
   name = "${var.name}-${count.index}"
-  cores = 2
-  memory = 2048
-  disk_size = "32G"
-  # storage = var.storage
-  # net_bridge = "vmbr0"
-  # sshkeys = var.sshkeys
-  # clone_from = var.clone_from
-  clone_id = var.clone_id
+  cpu_cores = var.cpu_cores
+  memory = var.memory
+  disk_size = var.disk_size
+  clone_from = var.clone_from
   target_node = var.target_node
 }

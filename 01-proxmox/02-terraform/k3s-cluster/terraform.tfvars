@@ -1,12 +1,10 @@
 pm_api_url = "https://192.168.68.11:8006/api2/json"
 pm_user = "root@pam"
-pm_password = "abcd1234"
+pm_password = "lcc02wsu"
 name = "k3s-node"
-node_count = 7
-# target_node is required unless proxmox is set up with a cluster. Since this is
-# a homelab of just one computer, we keep it simple.
+node_count = 3
 target_node = "obsidian"
-# iso and clone_from are mutually exclusive
-#iso = "local:iso/ubuntu-24.04.3-live-server-amd64.iso"
-clone_from = "ubuntu-24-lts"
-clone_id = 102
+clone_from = "ubuntu-24-lts-cloudimg-template"
+disk_size = "32G"
+cpu_cores = 2
+memory = 4096
