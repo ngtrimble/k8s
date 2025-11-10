@@ -12,7 +12,7 @@ resource "proxmox_vm_qemu" "vm" {
   memory = var.memory
   scsihw = var.scsihw
   target_node = var.target_node
-  boot = "order=virtio0;net0"
+  boot = "order=scsi0;net0"
   clone = var.clone_from
   full_clone = true
   agent = 1
