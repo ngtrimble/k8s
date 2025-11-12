@@ -48,8 +48,6 @@ function create_template() {
     qm set $1 --cipassword ${cipassword}
     # Set the sshkeys for login
     qm set $1 --sshkeys ${sshkeys}
-    # Set the cloud init custom script
-    qm set $1 --cicustom ${cicustom}
  
     # Resize the disk to 8G, a reasonable minimum. You can expand it more later.
     # If the disk is already bigger than 8G, this will fail, and that is okay.
@@ -57,20 +55,25 @@ function create_template() {
 
     qm start $1
 
-    # # Make it a template
-    # qm template $1
+    # Make it a template
+    qm template $1
 }
+
+# Install whois for mkpasswd command
+apt-get update && apt-get install -y whois
 
 # Set content type local so that snippets can be used
 pvesm set local --content iso,backup,vztmpl,snippets
 
 # Create an ssh key pair if it does not already exist
 # You can modifiy or omit this if you prefer to supply and store your key in another manner.
-export sshkeys="/root/.ssh/pve-key.pub"
-if [[ ! -f $sshkey ]]; then
+export pve_key_filename="/root/.ssh/pve-key.pub"
+if [[ ! -f $pve_key_filename ]]; then
     mkdir -p /root/.ssh
     ssh-keygen -f /root/.ssh/pve-key -N ""
 fi
+#pve_key=$(head -n 1 ~/.ssh/pve-key.pub | tr -d '\n')
+export sshkeys=$pve_key_filename
 
 # Name of your storage
 export storage=local-lvm
@@ -81,19 +84,41 @@ export ciuser=pve-user
 # Password to use for pve-user
 export cipassword=changeme
 
-# Cloud Init custom snippet for Proxmox / Qemu support
-# See https://registry.terraform.io/providers/Telmate/proxmox/latest/docs/guides/cloud-init%2520getting%2520started#creating-a-snippet
-tee /var/lib/vz/snippets/user-data << EOF
-packages:
-  - qemu-guest-agent
-runcmd:
-  - apt-get update
-  - apt-get install qemu-guest-agent -y
-  - systemctl enable qemu-guest-agent
-  - systemctl start qemu-guest-agent
-EOF
-export cicustom="user=local:snippets/user-data"
+#export password=$(mkpasswd changeme)
+
+# # Cloud Init custom snippet for Proxmox / Qemu support
+# # See https://registry.terraform.io/providers/Telmate/proxmox/latest/docs/guides/cloud-init%2520getting%2520started#creating-a-snippet
+# mkdir -p /var/lib/vz/snippets
+# tee /var/lib/vz/snippets/user-data << EOF
+# network:
+#   version: 2
+#   ethernets:
+#     all-eth:
+#       match:
+#         name: "e*"
+#       dhcp4: true
+#       dhcp6: true
+#       optional: true
+      
+# users:
+#   - name: pve-user
+#     shell: /bin/bash
+#     sudo: ALL=(ALL) NOPASSWD:ALL
+#     ssh_authorized_keys:
+#       - ${pve_key}
+#     groups: users,wheel
+
+# packages:
+#   - qemu-guest-agent
+
+# package_upgrade: true
+
+# runcmd:
+#   - systemctl enable qemu-guest-agent
+#   - systemctl start qemu-guest-agent
+# EOF
+# export cicustom="user=local:snippets/user-data"
 
 # Ubuntu 24.04 (Noble Numbat) LTS
-curl -vkL -O -C - "https://cloud-images.ubuntu.com/releases/24.04/release/ubuntu-24.04-server-cloudimg-amd64.img"
+curl -skL -O -C - "https://cloud-images.ubuntu.com/releases/24.04/release/ubuntu-24.04-server-cloudimg-amd64.img"
 create_template 1000 "ubuntu-24-lts-cloudimg-template" "ubuntu-24.04-server-cloudimg-amd64.img"
