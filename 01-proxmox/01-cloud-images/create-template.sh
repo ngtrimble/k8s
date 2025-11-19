@@ -55,6 +55,14 @@ function create_template() {
 
     qm start $1
 
+    # timeout 20s ssh \
+    #   -o BatchMode=yes \ 
+    #   -o ConnectTimeout=10 \
+    #   -o ServerAliveInterval=5 \
+    #   -o ServerAliveCountMax=2 \
+    #   -o StrictHostKeyChecking=accept-new \
+    #   pve-user@ ''
+
     # Make it a template
     qm template $1
 }
@@ -83,6 +91,14 @@ export ciuser=pve-user
 
 # Password to use for pve-user
 export cipassword=changeme
+
+export install_qemu_guest_agent=$(cat << EOF
+apt-get update && \
+apt-get install -y qemu-guest-agent && \
+systemctl enable qemu-guest-agent && \
+systemctl start qemu-guest-agent
+EOF
+)
 
 #export password=$(mkpasswd changeme)
 
