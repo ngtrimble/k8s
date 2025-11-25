@@ -117,5 +117,5 @@ curl -skL -O -C - "https://cloud-images.ubuntu.com/releases/24.04/release/ubuntu
 create_template 1000 "ubuntu-24-lts-cloudimg-template" "ubuntu-24.04-server-cloudimg-amd64.img"
 
 printf "VM 1000 starting up. Log into VM and run:\n\n\t"
-printf "sudo apt-get install -y qemu-guest-agent && sudo systemctl enable qemu-guest-agent && sudo systemctl start qemu-guest-agent && sudo shutdown -h now\n"
+printf "sudo apt-get install -y qemu-guest-agent && sudo systemctl enable qemu-guest-agent && sudo systemctl start qemu-guest-agent && sudo apt install -y avahi-daemon && sudo shutdown -h now\n"
 printf "Next make VM 1000 a template via the Proxmox UI or by issuing command: qm template 1000\n"
