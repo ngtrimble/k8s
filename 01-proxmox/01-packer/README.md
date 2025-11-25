@@ -2,6 +2,8 @@
 
 ## Introduction
 
+This is non-functional as of 11/24/2025
+
 Packer is used here to create a Virtual Machine template within your Proxmox installation that can be used to 
 clone from. 
 

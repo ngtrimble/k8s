@@ -20,9 +20,8 @@ resource "proxmox_vm_qemu" "vm" {
   ciuser = var.ciuser
   cipassword = var.cipassword
   ciupgrade = true
-  #cicustom = "vendor=local:snippets/qemu-guest-agent.yaml"
   sshkeys = var.sshkeys
-  ipconfig0 = "ip=dhcp,ip6=auto"
+  ipconfig0 = "ip=dhcp,ip6=dhcp"
 
   cpu {
     cores = var.cpu_cores
@@ -41,7 +40,7 @@ resource "proxmox_vm_qemu" "vm" {
       }
     }
     ide {
-      ide0 {
+      ide2 {
         cloudinit {
           storage = var.storage
         }

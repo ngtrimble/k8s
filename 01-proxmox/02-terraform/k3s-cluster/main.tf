@@ -28,4 +28,5 @@ module "vm" {
   disk_size = var.disk_size
   clone_from = var.clone_from
   target_node = var.target_node
+  cipassword = var.cipassword
 }

@@ -63,3 +63,8 @@ variable "disk_size" {
   type = string
   default = "32G"
 }
+
+variable "cipassword" {
+  description = "Set to change the password in the template"
+  type = string
+}
