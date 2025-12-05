@@ -1,3 +1,6 @@
+# macOS
+.DS_Store
+
 # Terraform-generated directories and files
 .terraform/
 .terraform.lock.hcl

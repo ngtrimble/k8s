@@ -9,7 +9,10 @@ packer {
 
 variable "proxmox_url" {
   type    = string
-  default = "https://proxmox.hostname.tld:8006"
+}
+
+variable "node" {
+  type    = string
 }
 
 source "proxmox-clone" "vm" {
@@ -18,10 +21,6 @@ source "proxmox-clone" "vm" {
   cd_label = "cidata"
   proxmox_url = var.proxmox_url
 }
-
-# variable "node" {
-#   type    = string
-# }
 
 # variable "iso_pool" {
 #   type    = string
