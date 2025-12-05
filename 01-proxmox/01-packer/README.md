@@ -2,10 +2,10 @@
 
 ## Introduction
 
-This is non-functional as of 11/24/2025
-
-Packer is used here to create a Virtual Machine template within your Proxmox installation that can be used to 
-clone from. 
+This is non-functional as of 12/5/2025. Creating a template from an ISO is error prone with Ubuntu and Proxmox when
+attempting to install and configure cloud-init. Using the Ubuntu Cloud Images still requires creating an intial VM
+via a script anyway, so 01-cloud-images accomplishes this now. Packer is used here to create a Virtual Machine 
+template within your Proxmox installation that can be used to clone from.
 
 ## Execution
 
