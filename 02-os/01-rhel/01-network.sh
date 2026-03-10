@@ -44,4 +44,4 @@ nmcli connection modify $IFACE ipv4.dns $DNS
 nmcli connection modify $IFACE ipv4.method manual
 nmcli device show $IFACE
 
-echo "Reboot for changes to take effect..."
+printf "\nReboot for changes to take effect...\n"
