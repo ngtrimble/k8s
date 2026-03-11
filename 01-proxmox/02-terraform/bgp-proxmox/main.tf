@@ -55,12 +55,6 @@ resource "proxmox_virtual_environment_vm" "centos_vm" {
       }
     }
   }
-
-  lifecycle {
-    ignore_changes = [initialization]
-  }
-
-  depends_on = []
 }
 
 resource "proxmox_virtual_environment_download_file" "centos_cloud_image" {
