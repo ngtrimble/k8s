@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 set -eo pipefail
 
+if [[ $EUID -ne 0 ]]; then
+   echo "This script must be run as root"
+   exit 1
+fi
+
 usage() {
 	echo "$0 HOSTNAME IP GATEWAY DNS IFACE"
 	exit 1
@@ -44,4 +49,5 @@ nmcli connection modify $IFACE ipv4.dns $DNS
 nmcli connection modify $IFACE ipv4.method manual
 nmcli device show $IFACE
 
-printf "\nReboot for changes to take effect...\n"
+printf "\nRebooting for changes to take effect...\n"
+reboot
