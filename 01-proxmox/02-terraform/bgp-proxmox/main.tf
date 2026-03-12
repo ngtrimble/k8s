@@ -7,41 +7,32 @@ terraform {
   }
 }
 
-provider "proxmox" {
-  endpoint = var.proxmox_endpoint
-  username = var.proxmox_username
-  password = var.proxmox_password
-  insecure = var.proxmox_insecure
-}
-
-# CentOS 10 VM created from cloud image
-resource "proxmox_virtual_environment_vm" "centos_vm" {
-  name        = var.centos_vm_name
-  description = "CentOS 10 VM created from cloud image"
-  node_name   = var.centos_target_node
-  vm_id       = var.centos_vm_id
+resource "proxmox_virtual_environment_vm" "vm" {
+  name        = var.vm_name
+  description = "VM created from cloud image"
+  node_name   = var.target_node
 
   clone {
-    vm_id = var.centos_clone_from
+    vm_id = var.clone_from
   }
 
   cpu {
-    cores = var.centos_cores
-    type  = "host"
+    cores = var.cpu_cores
+    type  = var.cpu_type
   }
 
   memory {
-    dedicated = var.centos_memory
+    dedicated = var.memory
   }
 
   disk {
-    datastore_id = var.centos_storage
+    datastore_id = var.disk_datastore_id
     interface    = "scsi0"
-    size         = var.centos_disk_size
+    size         = var.disk_size
   }
 
   network_device {
-    bridge = var.centos_bridge
+    bridge = var.network_bridge
   }
 
   operating_system {
@@ -57,9 +48,9 @@ resource "proxmox_virtual_environment_vm" "centos_vm" {
   }
 }
 
-resource "proxmox_virtual_environment_download_file" "centos_cloud_image" {
+resource "proxmox_virtual_environment_download_file" "cloud_image" {
   content_type = "import"
-  datastore_id = var.data_storage_id
+  datastore_id = var.cloud_image_datastore_id
   node_name    = var.cloud_image_node_name
-  url          = var.centos_url
+  url          = var.cloud_image_url
 }
