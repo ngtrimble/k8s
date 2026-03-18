@@ -16,7 +16,7 @@ provider "proxmox" {
 }
 
 module "virtual_machines" {
-  source = "../bgp-proxmox"
+  source = "../virtual-machine"
   providers = {
     proxmox = proxmox.root-module-proxmox
   }
@@ -29,7 +29,7 @@ module "virtual_machines" {
   vm_name                  = "${var.vm_name}${count.index}"
   target_node              = var.target_node
   cpu_cores                = var.cpu_cores
-  cpu_type                 = "host"
+  cpu_type                 = var.cpu_type
   memory                   = var.memory
   disk_size                = var.disk_size
   disk_datastore_id        = var.disk_datastore_id
@@ -39,5 +39,5 @@ module "virtual_machines" {
   cloud_image_datastore_id = var.cloud_image_datastore_id
   cloud_image_node_name    = var.cloud_image_node_name
   cloud_image_url          = var.cloud_image_url
-  cloud_image_file_name = var.cloud_image_file_name
+  cloud_image_file_name    = var.cloud_image_file_name
 }

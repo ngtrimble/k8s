@@ -47,6 +47,12 @@ variable "cpu_cores" {
   default     = 2
 }
 
+variable "cpu_type" {
+  description = "Type of CPU for VM"
+  type        = string
+  default     = "host"
+}
+
 variable "memory" {
   description = "Memory in MB for VM"
   type        = number
