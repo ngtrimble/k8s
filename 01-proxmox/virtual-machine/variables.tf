@@ -82,10 +82,16 @@ variable "network_gateway" {
   default     = ""
 }
 
+variable "network_dns_servers" {
+  description = "DNS servers to configure on the VM"
+  type        = list(string)
+  default     = []
+}
+
 variable "cloud_image_datastore_id" {
   description = "Storage pool for cloud image"
   type        = string
-  default     = "local-lvm"
+  default     = "local"
 }
 
 variable "cloud_image_node_name" {

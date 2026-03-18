@@ -41,7 +41,17 @@ resource "proxmox_virtual_environment_vm" "vm" {
         address = var.network_address
         gateway = var.network_address != "auto" && var.network_address != "slaac" ? var.network_gateway : null
       }
+
     }
+
+    dns {
+      servers = var.network_dns_servers
+    }
+  }
+
+  agent {
+    # read 'Qemu guest agent' section, change to true only when ready
+    enabled = false
   }
 }
 

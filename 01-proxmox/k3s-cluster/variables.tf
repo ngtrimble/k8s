@@ -7,7 +7,7 @@ variable "proxmox_endpoint" {
 variable "proxmox_username" {
   description = "The username for Proxmox authentication"
   type        = string
-  default     = "pveuser"
+  default     = "root@pam"
 }
 
 variable "proxmox_password" {
@@ -89,6 +89,12 @@ variable "network_gateway" {
   default     = ""
 }
 
+variable "network_dns_servers" {
+  description = "DNS servers to configure on the VM"
+  type        = list(string)
+  default     = []
+}
+
 variable "disk_datastore_id" {
   description = "Storage pool for data"
   type        = string
@@ -110,7 +116,7 @@ variable "node_count" {
 variable "cloud_image_datastore_id" {
   description = "Storage pool for cloud image"
   type        = string
-  default     = "local-lvm"
+  default     = "local"
 }
 
 variable "cloud_image_url" {
