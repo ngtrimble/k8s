@@ -1,20 +1,15 @@
 terraform {
   required_providers {
     proxmox = {
-      source = "bpg/proxmox"
+      source  = "bpg/proxmox"
       version = ">= 0.98"
     }
   }
 }
 
 resource "proxmox_virtual_environment_vm" "vm" {
-  name        = var.vm_name
-  description = "VM created from cloud image"
-  node_name   = var.target_node
-
-  clone {
-    vm_id = var.clone_from
-  }
+  name      = var.vm_name
+  node_name = var.target_node
 
   cpu {
     cores = var.cpu_cores
@@ -26,9 +21,10 @@ resource "proxmox_virtual_environment_vm" "vm" {
   }
 
   disk {
-    datastore_id = var.disk_datastore_id
     interface    = "scsi0"
+    datastore_id = var.disk_datastore_id
     size         = var.disk_size
+    import_from  = proxmox_virtual_environment_download_file.cloud_image.id
   }
 
   network_device {
@@ -42,7 +38,8 @@ resource "proxmox_virtual_environment_vm" "vm" {
   initialization {
     ip_config {
       ipv4 {
-        address = "dhcp"
+        address = var.network_address
+        gateway = var.network_address != "auto" && var.network_address != "slaac" ? var.network_gateway : null
       }
     }
   }
@@ -53,4 +50,5 @@ resource "proxmox_virtual_environment_download_file" "cloud_image" {
   datastore_id = var.cloud_image_datastore_id
   node_name    = var.cloud_image_node_name
   url          = var.cloud_image_url
+  file_name    = var.cloud_image_file_name
 }
