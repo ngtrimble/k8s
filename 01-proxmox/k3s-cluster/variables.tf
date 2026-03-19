@@ -140,3 +140,8 @@ variable "cloud_image_file_name" {
   description = "The file name of the cloud image"
   type        = string
 }
+
+variable "ssh_public_key_path" {
+  description = "Path to the SSH public key file"
+  type        = string
+}

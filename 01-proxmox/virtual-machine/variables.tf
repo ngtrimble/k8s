@@ -46,6 +46,11 @@ variable "vm_timezone" {
   default     = "UTC"
 }
 
+variable "ssh_public_key_path" {
+  description = "Path to the SSH public key file"
+  type        = string
+}
+
 variable "target_node" {
   description = "Proxmox node to deploy VM on"
   type        = string

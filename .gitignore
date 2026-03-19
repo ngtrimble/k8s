@@ -22,3 +22,10 @@ override.tf
 override.tf.json
 *_override.tf
 *_override.tf.json
+
+# SSH keys
+id_rsa
+id_rsa.pub
+id_ed25519
+id_ed25519.pub
+*ssh-key*

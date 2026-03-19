@@ -8,8 +8,8 @@ terraform {
 }
 
 resource "proxmox_virtual_environment_vm" "vm" {
-  name      = var.vm_name
-  node_name = var.target_node
+  name            = var.vm_name
+  node_name       = var.target_node
   stop_on_destroy = true
 
   cpu {
@@ -82,6 +82,8 @@ resource "proxmox_virtual_environment_file" "user_data_cloud_config" {
           - wheel
           - sudo
         sudo: ALL=(ALL) NOPASSWD:ALL
+        ssh_authorized_keys:
+          - ${trimspace(data.local_file.ssh_public_key.content)}
     package_update: true
     packages:
       - qemu-guest-agent
@@ -93,4 +95,8 @@ resource "proxmox_virtual_environment_file" "user_data_cloud_config" {
 
     file_name = "user-data-cloud-config.yaml"
   }
+}
+
+data "local_file" "ssh_public_key" {
+  filename = var.ssh_public_key_path
 }

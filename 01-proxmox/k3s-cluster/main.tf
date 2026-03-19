@@ -43,4 +43,5 @@ module "virtual_machines" {
   cloud_image_node_name    = var.cloud_image_node_name
   cloud_image_url          = var.cloud_image_url
   cloud_image_file_name    = var.cloud_image_file_name
+  ssh_public_key_path      = var.ssh_public_key_path
 }
