@@ -42,7 +42,6 @@ resource "proxmox_virtual_environment_vm" "vm" {
         address = var.network_address
         gateway = var.network_address != "auto" && var.network_address != "slaac" ? var.network_gateway : null
       }
-
     }
 
     dns {
@@ -64,9 +63,6 @@ resource "proxmox_virtual_environment_download_file" "cloud_image" {
   url          = var.cloud_image_url
   file_name    = var.cloud_image_file_name
   overwrite    = false
-  lifecycle {
-    prevent_destroy = true
-  }
 }
 
 resource "proxmox_virtual_environment_file" "user_data_cloud_config" {

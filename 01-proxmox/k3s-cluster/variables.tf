@@ -89,10 +89,10 @@ variable "network_bridge" {
   default     = "vmbr0"
 }
 
-variable "network_address" {
-  description = "IP address for the VM in CIDR notation (e.g., 192.168.68.100/24)"
-  type        = string
-  default     = "dhcp"
+variable "network_addresses" {
+  description = "IP addresses for the VM's in CIDR notation (e.g., 192.168.68.100/24)"
+  type        = list(string)
+  default     = ["dhcp"]
 }
 
 variable "network_gateway" {
