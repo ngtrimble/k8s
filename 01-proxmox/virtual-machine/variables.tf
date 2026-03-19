@@ -46,6 +46,12 @@ variable "vm_timezone" {
   default     = "UTC"
 }
 
+variable "vm_os_family" {
+  description = "OS family to determine default admin group (debian or rhel)"
+  type        = string
+  default     = "rhel"
+}
+
 variable "ssh_public_key_path" {
   description = "Path to the SSH public key file"
   type        = string

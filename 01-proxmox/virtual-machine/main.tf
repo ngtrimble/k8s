@@ -79,17 +79,19 @@ resource "proxmox_virtual_environment_file" "user_data_cloud_config" {
       - default
       - name: ${var.vm_username}
         groups:
-          - wheel
-          - sudo
+          - ${var.vm_os_family == "rhel" ? "wheel" : "sudo"}
         sudo: ALL=(ALL) NOPASSWD:ALL
         ssh_authorized_keys:
           - ${trimspace(data.local_file.ssh_public_key.content)}
     package_update: true
     packages:
       - qemu-guest-agent
+      ${var.vm_os_family == "rhel" ? "- iptables-services" : ""}
+      ${var.vm_os_family == "rhel" ? "- kernel-modules-extra" : ""}
     runcmd:
       - systemctl enable qemu-guest-agent
       - systemctl start qemu-guest-agent
+      - systemctl disable firewalld --now
       - echo "done" > /tmp/cloud-config.done
     EOF
 

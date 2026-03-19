@@ -47,6 +47,12 @@ variable "vm_timezone" {
   default     = "UTC"
 }
 
+variable "vm_os_family" {
+  description = "OS family to determine default admin group (debian or rhel)"
+  type        = string
+  default     = "rhel"
+}
+
 variable "target_node" {
   description = "Proxmox node to deploy VM on"
   type        = string
