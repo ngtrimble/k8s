@@ -28,6 +28,24 @@ variable "vm_name" {
   default     = "vm-01"
 }
 
+variable "vm_username" {
+  description = "Username for the VM"
+  type        = string
+  default     = "pveuser"
+}
+
+variable "vm_password" {
+  description = "Password for the VM"
+  type        = string
+  sensitive   = true
+}
+
+variable "vm_timezone" {
+  description = "Timezone for the VM"
+  type        = string
+  default     = "UTC"
+}
+
 variable "target_node" {
   description = "Proxmox node to deploy VM on"
   type        = string

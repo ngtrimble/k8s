@@ -27,6 +27,9 @@ module "virtual_machines" {
   proxmox_password         = var.proxmox_password
   proxmox_insecure         = var.proxmox_insecure
   vm_name                  = "${var.vm_name}${count.index}"
+  vm_username              = var.vm_username
+  vm_password              = var.vm_password
+  vm_timezone              = var.vm_timezone
   target_node              = var.target_node
   cpu_cores                = var.cpu_cores
   cpu_type                 = var.cpu_type
