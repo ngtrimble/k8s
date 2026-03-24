@@ -69,9 +69,6 @@ resource "proxmox_virtual_environment_file" "user_data_cloud_config" {
     users:
       - default
       - name: ${var.vm_username}
-        groups:
-          ${var.vm_os_family == "rhel" ? "- wheel" : ""}
-          ${var.vm_os_family == "debian" ? "- sudo" : ""}
         sudo: ALL=(ALL) NOPASSWD:ALL
         ssh_authorized_keys:
           - ${trimspace(data.local_file.ssh_public_key.content)}
@@ -83,8 +80,6 @@ resource "proxmox_virtual_environment_file" "user_data_cloud_config" {
     runcmd:
       - systemctl enable qemu-guest-agent
       - systemctl start qemu-guest-agent
-      ${var.vm_os_family == "rhel" ? "- systemctl disable firewalld --now" : ""}
-      - echo "done" > /tmp/cloud-config.done
     EOF
 
     file_name = "user-data-cloud-config.yaml"
