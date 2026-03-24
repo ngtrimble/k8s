@@ -83,6 +83,11 @@ variable "disk_size" {
   default     = 40
 }
 
+variable "disk_import_from" {
+  description = "Path to the disk image to import from"
+  type        = string
+}
+
 variable "storage" {
   description = "Storage pool for VM"
   type        = string
@@ -137,11 +142,6 @@ variable "cloud_image_datastore_id" {
   default     = "local"
 }
 
-variable "cloud_image_url" {
-  description = "URL for the cloud image"
-  type        = string
-}
-
 variable "cloud_image_file_name" {
   description = "The file name of the cloud image"
   type        = string
@@ -150,4 +150,16 @@ variable "cloud_image_file_name" {
 variable "ssh_public_key_path" {
   description = "Path to the SSH public key file"
   type        = string
+}
+
+variable "environment_file_datastore_id" {
+  description = "Storage pool for environment file (cloud-config)"
+  type        = string
+  default     = "local"
+}
+
+variable "environment_file_node_name" {
+  description = "Proxmox node to store environment file on"
+  type        = string
+  default     = "pve"
 }

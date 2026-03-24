@@ -25,7 +25,7 @@ resource "proxmox_virtual_environment_vm" "vm" {
     interface    = "scsi0"
     datastore_id = var.disk_datastore_id
     size         = var.disk_size
-    import_from  = proxmox_virtual_environment_download_file.cloud_image.id
+    import_from  = var.disk_import_from
   }
 
   network_device {
@@ -56,19 +56,10 @@ resource "proxmox_virtual_environment_vm" "vm" {
   }
 }
 
-resource "proxmox_virtual_environment_download_file" "cloud_image" {
-  content_type = "import"
-  datastore_id = var.cloud_image_datastore_id
-  node_name    = var.cloud_image_node_name
-  url          = var.cloud_image_url
-  file_name    = var.cloud_image_file_name
-  overwrite    = false
-}
-
 resource "proxmox_virtual_environment_file" "user_data_cloud_config" {
   content_type = "snippets"
-  datastore_id = var.cloud_image_datastore_id
-  node_name    = var.cloud_image_node_name
+  datastore_id = var.environment_file_datastore_id
+  node_name    = var.environment_file_node_name
 
   source_raw {
     data = <<-EOF
@@ -79,7 +70,8 @@ resource "proxmox_virtual_environment_file" "user_data_cloud_config" {
       - default
       - name: ${var.vm_username}
         groups:
-          - ${var.vm_os_family == "rhel" ? "wheel" : "sudo"}
+          ${var.vm_os_family == "rhel" ? "- wheel" : ""}
+          ${var.vm_os_family == "debian" ? "- sudo" : ""}
         sudo: ALL=(ALL) NOPASSWD:ALL
         ssh_authorized_keys:
           - ${trimspace(data.local_file.ssh_public_key.content)}
@@ -91,7 +83,7 @@ resource "proxmox_virtual_environment_file" "user_data_cloud_config" {
     runcmd:
       - systemctl enable qemu-guest-agent
       - systemctl start qemu-guest-agent
-      - systemctl disable firewalld --now
+      ${var.vm_os_family == "rhel" ? "- systemctl disable firewalld --now" : ""}
       - echo "done" > /tmp/cloud-config.done
     EOF
 

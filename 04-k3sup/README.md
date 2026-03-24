@@ -37,3 +37,7 @@ k3sup join --user pve-user --ip K3S_NODE_1_IP --server --server-ip K3S_NODE_0_IP
 ## Join the third node
 
 k3sup join --user pve-user --ip K3S_NODE_2_IP --server-ip K3S_NODE_0_IP --ssh-key ~/.ssh/pve-key
+
+
+
+k3sup join --user pveuser --ip 192.168.68.21 --server-ip 192.168.68.20 --server-user pveuser --ssh-key ~/.ssh/dev-ssh-key

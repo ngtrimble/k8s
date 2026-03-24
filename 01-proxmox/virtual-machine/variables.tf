@@ -93,6 +93,23 @@ variable "disk_datastore_id" {
   default     = "local-lvm"
 }
 
+variable "disk_import_from" {
+  description = "Path to the disk image to import from"
+  type        = string
+}
+
+variable "environment_file_datastore_id" {
+  description = "Storage pool for environment file (cloud-config)"
+  type        = string
+  default     = "local"
+}
+
+variable "environment_file_node_name" {
+  description = "Proxmox node to store environment file on"
+  type        = string
+  default     = "pve"
+}
+
 variable "network_bridge" {
   description = "Network bridge for VM"
   type        = string
@@ -127,14 +144,4 @@ variable "cloud_image_node_name" {
   description = "Proxmox node to download the cloud image on"
   type        = string
   default     = "pve"
-}
-
-variable "cloud_image_url" {
-  description = "URL for the cloud image"
-  type        = string
-}
-
-variable "cloud_image_file_name" {
-  description = "The file name for the cloud image download"
-  type        = string
 }
