@@ -64,8 +64,8 @@ resource "proxmox_virtual_environment_file" "user_data_cloud_config" {
   source_raw {
     data = <<-EOF
     #cloud-config
-    hostname: ${var.vm_name}
-    fqdn: ${var.vm_name}.local
+    #hostname: ${var.vm_name}
+    fqdn: ${var.vm_name}.
     timezone: ${var.vm_timezone}
     users:
       - default
