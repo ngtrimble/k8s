@@ -40,6 +40,7 @@ module "virtual_machines" {
   network_bridge                = var.network_bridge
   network_address               = var.network_addresses[count.index]
   network_gateway               = var.network_gateway
+  network_dns_servers           = var.network_dns_servers
   cloud_image_datastore_id      = var.cloud_image_datastore_id
   ssh_public_key_path           = var.ssh_public_key_path
   vm_os_family                  = var.vm_os_family

@@ -75,14 +75,17 @@ resource "proxmox_virtual_environment_file" "user_data_cloud_config" {
           - ${trimspace(data.local_file.ssh_public_key.content)}
     package_update: true
     package_upgrade: true
-    packages:%{if var.vm_os_family == "debian" }
-      - qemu-guest-agent%{endif}%{if var.vm_os_family == "rhel" }
+    packages:%{if var.vm_os_family == "debian"}
+      - qemu-guest-agent%{endif}%{if var.vm_os_family == "rhel"}
       - qemu-guest-agent
       - kernel-modules-extra
       - iptables-services
-      - avahi%{endif}%{if var.vm_os_family == "rhel"}
+      - avahi
+      - vim
+      - bind-utils%{endif}%{if var.vm_os_family == "rhel"}
     runcmd:
-      systemctl enable --now avahi-daemon%{endif}
+      systemctl enable avahi-daemon
+      systemctl start avahi-daemon%{endif}
     EOF
 
     file_name = "${var.vm_name}-user-data-cloud-config.yaml"
