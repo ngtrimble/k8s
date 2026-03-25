@@ -65,6 +65,7 @@ resource "proxmox_virtual_environment_file" "user_data_cloud_config" {
     data = <<-EOF
     #cloud-config
     hostname: ${var.vm_name}
+    fqdn: ${var.vm_name}.local
     timezone: ${var.vm_timezone}
     users:
       - default
@@ -73,16 +74,18 @@ resource "proxmox_virtual_environment_file" "user_data_cloud_config" {
         ssh_authorized_keys:
           - ${trimspace(data.local_file.ssh_public_key.content)}
     package_update: true
-    packages:
+    package_upgrade: true
+    packages:%{if var.vm_os_family == "debian" }
+      - qemu-guest-agent%{endif}%{if var.vm_os_family == "rhel" }
       - qemu-guest-agent
-      ${var.vm_os_family == "rhel" ? "- iptables-services" : ""}
-      ${var.vm_os_family == "rhel" ? "- kernel-modules-extra" : ""}
+      - kernel-modules-extra
+      - iptables-services
+      - avahi%{endif}%{if var.vm_os_family == "rhel"}
     runcmd:
-      - systemctl enable qemu-guest-agent
-      - systemctl start qemu-guest-agent
+      systemctl enable --now avahi-daemon%{endif}
     EOF
 
-    file_name = "user-data-cloud-config.yaml"
+    file_name = "${var.vm_name}-user-data-cloud-config.yaml"
   }
 }
 
