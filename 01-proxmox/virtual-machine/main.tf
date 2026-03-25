@@ -64,7 +64,8 @@ resource "proxmox_virtual_environment_file" "user_data_cloud_config" {
   source_raw {
     data = <<-EOF
     #cloud-config
-    #hostname: ${var.vm_name}
+    # The '.' at the end of the fqdn is required. If it's not included, cloud-init will fail to set the hostname 
+    # and the VM will end up with a default hostname like 'localhost'.
     fqdn: ${var.vm_name}.
     timezone: ${var.vm_timezone}
     users:
