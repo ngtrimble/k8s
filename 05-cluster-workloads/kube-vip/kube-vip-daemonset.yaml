@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: kube-vip
+  namespace: kube-system
+  labels:
+    app: kube-vip
+spec:
+  selector:
+    matchLabels:
+      app: kube-vip
+  template:
+    metadata:
+      labels:
+        app: kube-vip
+    spec:
+      hostNetwork: true
+      serviceAccountName: kube-vip
+      containers:
+        - name: kube-vip
+          image: plndr/kube-vip:v0.5.5
+          args:
+            - start
+          env:
+            - name: vip_arp
+              value: "true"
+          volumeMounts:
+            - mountPath: /etc/kube-vip
+              name: kube-vip-config
+      volumes:
+        - name: kube-vip-config
+          configMap:
+            name: kube-vip-config
+      tolerations:
+        - operator: Exists
