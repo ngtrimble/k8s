@@ -1,14 +1,9 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-patchesJson6902:
-  - target:
-      group: ""
-      version: v1
-      kind: ConfigMap
-      name: kubevip
-      namespace: kube-system
-    patch: |-
-      - op: replace
-        path: /data/range-global
-        value: 192.168.68.31-192.168.68.34
+  - ../../base
+configMapGenerator:
+- name: kubevip
+  namespace: kube-system
+  literals:
+    - range-global=192.168.68.31-192.168.68.34
