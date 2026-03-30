@@ -3,8 +3,7 @@ set -ex -o pipefail
 shopt -s expand_aliases
 
 usage() {
-    echo "Usage: $0 <env>"
-    echo "Example: $0 dev"
+    echo "Usage: $0 ENV"
     exit 1
 }
 
