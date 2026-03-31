@@ -8,18 +8,23 @@ $0 [-h] [-l LOADBALANCER_IP_MASK]
 	-h - Help or usage
 
 	-l - Loadbalancer IP address and subnet mask in format IP_ADDRESS/MASK (e.g. 192.168.1.10/24)
+
+	-i - Network interface (e.g. eth0)
 EOF
 exit 1
 }
 
 # These are default args for a k3s configuration that works with MetalLB on bare-metal installations
-while getopts "hl:" opt; do
+while getopts "hl:i:" opt; do
 	case $opt in
 		h)
 		usage
 		;;
 		l)
 		LOADBALANCER_IP_MASK="$OPTARG"
+		;;
+		i)
+		INTERFACE="$OPTARG"
 		;;
 		*)
 		usage
@@ -28,6 +33,10 @@ while getopts "hl:" opt; do
 done
 
 if [[ -z "$LOADBALANCER_IP_MASK" ]]; then
+	usage
+fi
+
+if [[ -z "$INTERFACE" ]]; then
 	usage
 fi
 
@@ -52,7 +61,7 @@ sudo service procps force-reload
 cat << EOF | sudo tee /etc/keepalived/keepalived.conf > /dev/null
 vrrp_instance VI_1 {
 	state MASTER
-	interface ens18 
+	interface $INTERFACE 
 	virtual_router_id 51
 	priority 255
 	advert_int 1

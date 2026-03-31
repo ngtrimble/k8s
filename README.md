@@ -19,7 +19,7 @@ topics:
 
 01 - Virtual Machine, Hypervisors and Hyperconverged Infrastructure solutions
 
-02 - Operating System level configs and software
+02 - Operating System configs and software
 
 03 - Containerized solutions outside of container orchestration (e.g. Docker, LXC, podman, etc.)
 
