@@ -15,21 +15,26 @@ source env/$ENV.env
 
 export KUBECONFIG=$(pwd)/$ENV-kubeconfig
 
-# TODO - remove this
-rm -f ~/.ssh/known_hosts
-
-# Install kube-vip before joining agent nodes to ensure the VIP is available for the agent nodes to join the cluster
+# Install kube-vip before joining agent nodes to ensure the K8S API is available from the VIP for the agent nodes to join the cluster
 pushd kube-vip
 ./install.sh $ENV
 popd
 
-k3sup install --ip $K3S_SERVER_NODE_IP --tls-san $VIP --user pveuser --ssh-key $SSH_KEY_PATH --local-path $KUBECONFIG --k3s-extra-args '--disable servicelb'
+# Use k3sup to:
+# * Install K3S on the first server node using ssh
+# * --cluster flag uses etcd as the datastore for K3S, which is required for HA control plane nodes
+# * --tls-san flag adds the VIP as a Subject Alternative Name (SAN) to the TLS certificate used by the K3S API server
+k3sup install --cluster --ip ${K3S_SERVER_NODES_IPS[0]} --tls-san $K8S_HA_API_VIP --user pveuser --ssh-key $SSH_KEY_PATH --local-path $KUBECONFIG --k3s-extra-args '--disable servicelb'
+
+for SERVER_NODE_IP in "${K3S_SERVER_NODES_IPS[@]:1}"; do
+  k3sup join --server --ip $SERVER_NODE_IP --server-ip $K8S_HA_API_VIP --tls-san $K8S_HA_API_VIP --user pveuser --ssh-key $SSH_KEY_PATH --k3s-extra-args '--disable servicelb'
+done
 
 sleep 10
 kubectl rollout status -n kube-system --timeout 60s daemonset/kube-vip-ds
 
-for AGENT_NODE_IP in "${K3S_SERVER_AGENT_NODES_IPS[@]}"; do
-  k3sup join --ip $AGENT_NODE_IP --server-ip $VIP --user pveuser --ssh-key $SSH_KEY_PATH
+for AGENT_NODE_IP in "${K3S_AGENT_NODES_IPS[@]}"; do
+  k3sup join --ip $AGENT_NODE_IP --server-ip $K8S_HA_API_VIP --user pveuser --ssh-key $SSH_KEY_PATH
 done
 
 kubectl get nodes

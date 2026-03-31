@@ -21,9 +21,14 @@ KVVERSION=$(curl -sL https://api.github.com/repos/kube-vip/kube-vip/releases | j
 alias docker="nerdctl"
 alias kube-vip="docker run --network host --rm ghcr.io/kube-vip/kube-vip:$KVVERSION"
 
+# Here we are using kube-vip to generate the DaemonSet manifest for the VIP, which we will apply 
+# to the cluster. We need to do this before joining the agent nodes to ensure the VIP is 
+# available for the agent nodes to join the cluster. Kube-vip runs from the container as a cli
+# application in this case for convenience only. This can be done from any machine that has access 
+# to docker or docker compatible runtime and kubectl.
 kube-vip manifest daemonset \
-    --interface $INTERFACE \
-    --address $VIP \
+    --interface $ARP_INTERFACE \
+    --address $K8S_HA_API_VIP \
     --inCluster \
     --taint \
     --controlplane \
@@ -32,9 +37,14 @@ kube-vip manifest daemonset \
     --leaderElection | tee base/kube-vip.yaml
 
 pushd overlays/$ENV
+# Use kustomize to build the final kube-vip manifest.
 kustomize build . > ../../$GENERATED_KUBE_VIP
 popd
 
+# Only the first control plane node in the cluster needs the manifest copied. It will get imported
+# by k3s to the cluster resources and be managed from there onwards. It must be copied to the first
+# node in the cluster so that other nodes can join using the VIP and not the individual IP of the first 
+# control plane node.
 scp -i $SSH_KEY_PATH $GENERATED_KUBE_VIP pveuser@$K3S_SERVER_NODE_IP:/tmp/kube-vip.yaml
 
 ssh -i $SSH_KEY_PATH pveuser@$K3S_SERVER_NODE_IP <<EOF
