@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e -o pipefail
 
-source .env
+source env/$1.env
 
 ssh -i $SSH_KEY_PATH pveuser@$K3S_SERVER_NODE_IP "sudo /usr/local/bin/k3s-uninstall.sh"
 

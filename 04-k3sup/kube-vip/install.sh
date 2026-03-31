@@ -18,7 +18,8 @@ curl -sL -o base/rbac.yaml https://kube-vip.io/manifests/rbac.yaml
 curl -sL -o base/kube-vip-cloud-controller.yaml https://raw.githubusercontent.com/kube-vip/kube-vip-cloud-provider/main/manifest/kube-vip-cloud-controller.yaml
 
 KVVERSION=$(curl -sL https://api.github.com/repos/kube-vip/kube-vip/releases | jq -r ".[0].name")
-alias kube-vip="nerdctl run --network host --rm ghcr.io/kube-vip/kube-vip:$KVVERSION"
+alias docker="nerdctl"
+alias kube-vip="docker run --network host --rm ghcr.io/kube-vip/kube-vip:$KVVERSION"
 
 kube-vip manifest daemonset \
     --interface $INTERFACE \
