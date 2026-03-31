@@ -45,11 +45,12 @@ popd
 # by k3s to the cluster resources and be managed from there onwards. It must be copied to the first
 # node in the cluster so that other nodes can join using the VIP and not the individual IP of the first 
 # control plane node.
-scp -i $SSH_KEY_PATH $GENERATED_KUBE_VIP pveuser@$K3S_SERVER_NODE_IP:/tmp/kube-vip.yaml
+scp -i $SSH_KEY_PATH $GENERATED_KUBE_VIP pveuser@${K3S_SERVER_NODES_IPS[0]}:/tmp/kube-vip.yaml
 
-ssh -i $SSH_KEY_PATH pveuser@$K3S_SERVER_NODE_IP <<EOF
+ssh -i $SSH_KEY_PATH pveuser@${K3S_SERVER_NODES_IPS[0]} <<EOF
 #!/usr/bin/env bash
 set -e -o pipefail
 sudo mkdir -p /var/lib/rancher/k3s/server/manifests/
 sudo mv /tmp/kube-vip.yaml /var/lib/rancher/k3s/server/manifests/
 EOF
+
