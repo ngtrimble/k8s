@@ -12,15 +12,18 @@ fi
 export ENV=$1
 source env/$ENV.env
 
+# TODO - remove
+rm -f ~/.ssh/known_hosts
+
 for AGENT_NODE_IP in "${K3S_SERVER_AGENT_NODES_IPS[@]}"; do
   k3sup join --ip $AGENT_NODE_IP --server-ip $VIP --user pveuser --ssh-key $SSH_KEY_PATH --k3s-extra-args
 done
 
 INSTALL_SCRIPT=""
 if [[ "$os" == "debian" ]]; then
-    INSTALL_SCRIPT="02-install-keepalived-debian.sh"
+    INSTALL_SCRIPT="install-keepalived-debian.sh"
 elif [[ "$os" == "redhat" ]]; then
-    INSTALL_SCRIPT="02-install-keepalived-redhat.sh"
+    INSTALL_SCRIPT="install-keepalived-redhat.sh"
 else
     echo "Unsupported OS: $os"
     exit 1
