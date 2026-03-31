@@ -25,11 +25,11 @@ popd
 
 k3sup install --ip $K3S_SERVER_NODE_IP --tls-san $VIP --user pveuser --ssh-key $SSH_KEY_PATH --local-path $KUBECONFIG --k3s-extra-args '--disable servicelb'
 
-sleep 120
+sleep 10
 kubectl rollout status -n kube-system --timeout 60s daemonset/kube-vip-ds
 
 for AGENT_NODE_IP in "${K3S_SERVER_AGENT_NODES_IPS[@]}"; do
-  k3sup join --ip $AGENT_NODE_IP --server-ip $VIP --user pveuser --ssh-key $SSH_KEY_PATH --k3s-extra-args '--disable servicelb'
+  k3sup join --ip $AGENT_NODE_IP --server-ip $VIP --user pveuser --ssh-key $SSH_KEY_PATH
 done
 
 kubectl get nodes
