@@ -2,14 +2,14 @@
 set -e -o pipefail
 
 # Creates a MetalLB LoadBalancer for external cluster access 
-METALLB_IPADDRESSPOOL=192.168.68.20/32
+METALLB_IPADDRESSPOOL=192.168.68.31/32
 
 # Use Helm to install MetalLb. The Helm chart supports 
 # loadBalancerClass (https://kubernetes.io/docs/concepts/services-networking/service/#load-balancer-class).
 helm repo add metallb https://metallb.github.io/metallb
 helm repo update
 sudo helm upgrade metallb metallb/metallb \
-	--install --namespace metallb-system --create-namespace
+	--install --namespace metallb-system --create-namespace --set loadBalancerClass=metallb
 
 sudo kubectl rollout status deployment/metallb-controller -n metallb-system
 
