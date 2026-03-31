@@ -20,6 +20,10 @@ pushd kube-vip
 ./install.sh $ENV
 popd
 
+pushd helm-customizations
+./install.sh $ENV
+popd
+
 # Use k3sup to:
 # * Install K3S on the first server node using ssh
 # * --cluster flag uses etcd as the datastore for K3S, which is required for HA control plane nodes

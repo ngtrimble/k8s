@@ -53,4 +53,3 @@ set -e -o pipefail
 sudo mkdir -p /var/lib/rancher/k3s/server/manifests/
 sudo mv /tmp/kube-vip.yaml /var/lib/rancher/k3s/server/manifests/
 EOF
-
