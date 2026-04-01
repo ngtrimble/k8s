@@ -1,9 +1,15 @@
+apiVersion: helm.cattle.io/v1
 kind: HelmChartConfig
 metadata:
   name: traefik
   namespace: kube-system
 spec:
-  valuesContent: |-
+  valuesContent: |
     providers:
-    kubernetesGateway:
+      kubernetesGateway:
         enabled: true
+        experimentalChannel: true
+    gateway:
+      enabled: true
+    gatewayClass:
+      enabled: true

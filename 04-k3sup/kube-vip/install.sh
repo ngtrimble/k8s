@@ -52,4 +52,6 @@ ssh -i $SSH_KEY_PATH pveuser@${K3S_SERVER_NODES_IPS[0]} <<EOF
 set -e -o pipefail
 sudo mkdir -p /var/lib/rancher/k3s/server/manifests/
 sudo mv /tmp/kube-vip.yaml /var/lib/rancher/k3s/server/manifests/
+sudo chown root:root /var/lib/rancher/k3s/server/manifests/kube-vip.yaml
+sudo chmod 600 /var/lib/rancher/k3s/server/manifests/kube-vip.yaml
 EOF
