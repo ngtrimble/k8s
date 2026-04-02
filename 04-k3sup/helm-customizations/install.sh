@@ -20,4 +20,5 @@ ssh -i $SSH_KEY_PATH pveuser@${K3S_SERVER_NODES_IPS[0]} <<EOF
 sudo mv /tmp/traefik-config.yaml /var/lib/rancher/k3s/server/manifests/traefik-config.yaml
 sudo chown root:root /var/lib/rancher/k3s/server/manifests/traefik-config.yaml
 sudo chmod 600 /var/lib/rancher/k3s/server/manifests/traefik-config.yaml
+sudo touch /var/lib/rancher/k3s/server/manifests/traefik-config.yaml
 EOF

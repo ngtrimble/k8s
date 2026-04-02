@@ -13,8 +13,8 @@ spec:
         app: http-echo
     spec:
       containers:
-      - name: http-echo
-        image: hashicorp/http-echo:latest
-        args: ["-text=Hello, Kubernetes!", "-listen=:5000"]
-        ports:
-        - containerPort: 5000
+        - name: http-echo
+          image: hashicorp/http-echo:latest
+          args: ["-text=Hello, Kubernetes!", "-listen=:5000"]
+          ports:
+            - containerPort: 5000

@@ -9,6 +9,7 @@ spec:
       kubernetesGateway:
         enabled: true
     gateway:
-      enabled: true
+      enabled: false
     gatewayClass:
       enabled: true
+      name: traefik

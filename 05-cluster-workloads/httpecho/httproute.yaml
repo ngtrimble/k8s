@@ -5,7 +5,6 @@ metadata:
 spec:
   parentRefs:
     - name: traefik
-      namespace: kube-system
       sectionName: web
   rules:
     - matches:
