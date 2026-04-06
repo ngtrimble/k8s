@@ -26,7 +26,7 @@ module "virtual_machines" {
   proxmox_username              = var.proxmox_username
   proxmox_password              = var.proxmox_password
   proxmox_insecure              = var.proxmox_insecure
-  vm_name                       = "${var.vm_name}${count.index}"
+  vm_name                       = "${var.vm_name}${count.index + 1}"
   vm_username                   = var.vm_username
   vm_password                   = var.vm_password
   vm_timezone                   = var.vm_timezone

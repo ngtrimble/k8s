@@ -15,14 +15,14 @@ source env/$ENV.env
 
 export KUBECONFIG=$(pwd)/$ENV-kubeconfig
 
-# # Install kube-vip before joining agent nodes to ensure the K8S API is available from the VIP for the agent nodes to join the cluster
-# pushd kube-vip
-# ./install.sh $ENV
-# popd
+# Install kube-vip before joining agent nodes to ensure the K8S API is available from the VIP for the agent nodes to join the cluster
+pushd kube-vip
+./install.sh $ENV
+popd
 
-# pushd helm-customizations
-# ./install.sh $ENV
-# popd
+pushd helmcharts
+./install.sh $ENV
+popd
 
 # Use k3sup to:
 # * Install K3S on the first server node using ssh
