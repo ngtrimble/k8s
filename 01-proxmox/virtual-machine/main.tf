@@ -28,19 +28,32 @@ resource "proxmox_virtual_environment_vm" "vm" {
     import_from  = var.disk_import_from
   }
 
-  network_device {
-    bridge = var.network_bridge
-  }
-
   operating_system {
     type = "l26"
   }
 
+  network_device {
+    bridge = var.network_bridge_1
+  }
+
+  network_device {
+    bridge = var.network_bridge_2
+
+  }
+
   initialization {
+    # ip_config for the first network_device (vmbr0)
     ip_config {
       ipv4 {
-        address = var.network_address
-        gateway = var.network_address != "auto" && var.network_address != "slaac" ? var.network_gateway : null
+        address = var.network_address_1
+        gateway = var.network_address_1 != "dhcp" ? var.network_gateway : null
+      }
+    }
+
+    # ip_config for the second network_device (vmbr1)
+    ip_config {
+      ipv4 {
+        address = var.network_address_2
       }
     }
 

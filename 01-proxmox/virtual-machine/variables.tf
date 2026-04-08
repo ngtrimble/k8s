@@ -110,22 +110,32 @@ variable "environment_file_node_name" {
   default     = "pve"
 }
 
-variable "network_bridge" {
+variable "network_bridge_1" {
   description = "Network bridge for VM"
   type        = string
   default     = "vmbr0"
 }
 
-variable "network_address" {
+variable "network_bridge_2" {
+  description = "Network bridge for VM"
+  type        = string
+  default     = "vmbr1"
+}
+
+variable "network_address_1" {
   description = "IP address for the VM in CIDR notation (e.g., 192.168.68.100/24)"
   type        = string
   default     = "dhcp"
 }
 
+variable "network_address_2" {
+  description = "IP address for the VM in CIDR notation (e.g., 10.10.0.10/24)"
+  type        = string
+}
+
 variable "network_gateway" {
   description = "Gateway IP address for the VM"
   type        = string
-  default     = ""
 }
 
 variable "network_dns_servers" {
