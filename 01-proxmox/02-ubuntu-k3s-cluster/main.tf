@@ -5,7 +5,7 @@ terraform {
   required_providers {
     proxmox = {
       source  = "bpg/proxmox"
-      version = ">= 0.98"
+      version = ">= 0.103.0"
     }
   }
 }
@@ -16,6 +16,42 @@ provider "proxmox" {
   username = var.proxmox_username
   password = var.proxmox_password
   insecure = var.proxmox_insecure
+}
+
+locals {
+  cloud_config = <<-EOF
+  #cloud-config
+  # The '.' at the end of the fqdn is required. If it's not included, cloud-init will fail to set the hostname 
+  # and the VM will end up with a default hostname like 'localhost'.
+  fqdn: ${var.vm_name}.
+  timezone: ${var.vm_timezone}
+  users:
+    - default
+    - name: ${var.vm_username}
+      sudo: ALL=(ALL) NOPASSWD:ALL
+      ssh_authorized_keys:
+        - ${trimspace(data.local_file.ssh_public_key.content)}
+      shell: /bin/bash
+  package_update: true
+  package_upgrade: true
+  packages:
+    - qemu-guest-agent
+    - vim
+  runcmd:
+    - ufw disable
+    - systemctl enable qemu-guest-agent
+    - systemctl start qemu-guest-agent
+  power_state:
+    delay: now
+    mode: reboot
+    message: "Rebooting after package updates"
+    timeout: 30
+    condition: true
+  EOF
+}
+
+data "local_file" "ssh_public_key" {
+  filename = var.ssh_public_key_path
 }
 
 module "virtual_machines" {
@@ -30,9 +66,6 @@ module "virtual_machines" {
   proxmox_password              = var.proxmox_password
   proxmox_insecure              = var.proxmox_insecure
   vm_name                       = "${var.vm_name}${count.index + 1}"
-  vm_username                   = var.vm_username
-  vm_password                   = var.vm_password
-  vm_timezone                   = var.vm_timezone
   target_node                   = var.target_node
   cpu_cores                     = var.cpu_cores
   cpu_type                      = var.cpu_type
@@ -47,8 +80,7 @@ module "virtual_machines" {
   network_gateway               = var.network_gateway
   network_dns_servers           = var.network_dns_servers
   cloud_image_datastore_id      = var.cloud_image_datastore_id
-  ssh_public_key_path           = var.ssh_public_key_path
-  vm_os_family                  = var.vm_os_family
   environment_file_datastore_id = var.environment_file_datastore_id
   environment_file_node_name    = var.environment_file_node_name
+  cloud_config                  = local.cloud_config
 }

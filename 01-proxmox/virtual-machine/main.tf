@@ -2,7 +2,7 @@ terraform {
   required_providers {
     proxmox = {
       source  = "bpg/proxmox"
-      version = ">= 0.98"
+      version = ">= 0.103.0"
     }
   }
 }
@@ -75,42 +75,8 @@ resource "proxmox_virtual_environment_file" "user_data_cloud_config" {
   node_name    = var.environment_file_node_name
 
   source_raw {
-    data = <<-EOF
-    #cloud-config
-    # The '.' at the end of the fqdn is required. If it's not included, cloud-init will fail to set the hostname 
-    # and the VM will end up with a default hostname like 'localhost'.
-    fqdn: ${var.vm_name}.
-    timezone: ${var.vm_timezone}
-    users:
-      - default
-      - name: ${var.vm_username}
-        sudo: ALL=(ALL) NOPASSWD:ALL
-        ssh_authorized_keys:
-          - ${trimspace(data.local_file.ssh_public_key.content)}
-        shell: /bin/bash
-    package_update: true
-    package_upgrade: true
-    packages:%{if var.vm_os_family == "debian"}
-      - qemu-guest-agent
-      - vim%{endif}%{if var.vm_os_family == "rhel"}
-      - qemu-guest-agent
-      - kernel-modules-extra
-      - iptables-services
-      - avahi
-      - vim
-      - bind-utils%{endif}
-    runcmd:%{if var.vm_os_family == "debian"}
-      - ufw disable
-      - systemctl enable qemu-guest-agent
-      - systemctl start qemu-guest-agent%{endif}%{if var.vm_os_family == "rhel"}
-      - systemctl enable avahi-daemon
-      - systemctl start avahi-daemon%{endif}
-    EOF
+    data = var.cloud_config
 
     file_name = "${var.vm_name}-user-data-cloud-config.yaml"
   }
-}
-
-data "local_file" "ssh_public_key" {
-  filename = var.ssh_public_key_path
 }

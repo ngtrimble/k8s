@@ -28,35 +28,6 @@ variable "vm_name" {
   default     = "vm-01"
 }
 
-variable "vm_username" {
-  description = "Username for the VM"
-  type        = string
-  default     = "pveuser"
-}
-
-variable "vm_password" {
-  description = "Password for the VM"
-  type        = string
-  sensitive   = true
-}
-
-variable "vm_timezone" {
-  description = "Timezone for the VM"
-  type        = string
-  default     = "UTC"
-}
-
-variable "vm_os_family" {
-  description = "OS family to determine default admin group (debian or rhel)"
-  type        = string
-  default     = "rhel"
-}
-
-variable "ssh_public_key_path" {
-  description = "Path to the SSH public key file"
-  type        = string
-}
-
 variable "target_node" {
   description = "Proxmox node to deploy VM on"
   type        = string
@@ -95,6 +66,11 @@ variable "disk_datastore_id" {
 
 variable "disk_import_from" {
   description = "Path to the disk image to import from"
+  type        = string
+}
+
+variable "cloud_config" {
+  description = "Raw cloud-config content to use as user data"
   type        = string
 }
 
