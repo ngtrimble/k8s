@@ -94,22 +94,34 @@ variable "storage" {
   default     = "local-lvm"
 }
 
-variable "network_bridge" {
-  description = "Network bridge for VM"
+variable "network_bridge_1" {
+  description = "First network bridge for VM"
   type        = string
   default     = "vmbr0"
 }
 
-variable "network_addresses" {
+variable "network_bridge_2" {
+  description = "Second network bridge for VM"
+  type        = string
+  default     = "vmbr1"
+}
+
+variable "network_addresses_1" {
   description = "IP addresses for the VM's in CIDR notation (e.g., 192.168.68.100/24)"
   type        = list(string)
   default     = ["dhcp"]
 }
 
+variable "network_addresses_2" {
+  description = "IP addresses for the VM's in CIDR notation (e.g., 192.168.68.100/24)"
+  type        = list(string)
+  default     = []
+}
+
 variable "network_gateway" {
   description = "Gateway IP address for the VM"
   type        = string
-  default     = ""
+  default     = null
 }
 
 variable "network_dns_servers" {

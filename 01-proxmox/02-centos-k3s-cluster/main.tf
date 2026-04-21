@@ -29,7 +29,7 @@ module "virtual_machines" {
   proxmox_username              = var.proxmox_username
   proxmox_password              = var.proxmox_password
   proxmox_insecure              = var.proxmox_insecure
-  vm_name                       = "${var.vm_name}${count.index}"
+  vm_name                       = "${var.vm_name}${count.index + 1}"
   vm_username                   = var.vm_username
   vm_password                   = var.vm_password
   vm_timezone                   = var.vm_timezone
@@ -40,8 +40,10 @@ module "virtual_machines" {
   disk_size                     = var.disk_size
   disk_import_from              = var.disk_import_from
   disk_datastore_id             = var.disk_datastore_id
-  network_bridge                = var.network_bridge
-  network_address               = var.network_addresses[count.index]
+  network_bridge_1              = var.network_bridge_1
+  network_bridge_2              = var.network_bridge_2
+  network_address_1             = var.network_addresses_1[count.index]
+  network_address_2             = var.network_addresses_2[count.index]
   network_gateway               = var.network_gateway
   network_dns_servers           = var.network_dns_servers
   cloud_image_datastore_id      = var.cloud_image_datastore_id
