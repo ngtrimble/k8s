@@ -95,7 +95,7 @@ variable "network_bridge_1" {
 variable "network_bridge_2" {
   description = "Network bridge for VM"
   type        = string
-  default     = "vmbr1"
+  default     = null
 }
 
 variable "network_address_1" {
@@ -107,6 +107,7 @@ variable "network_address_1" {
 variable "network_address_2" {
   description = "IP address for the VM in CIDR notation (e.g., 10.10.0.10/24)"
   type        = string
+  default     = null
 }
 
 variable "network_gateway" {

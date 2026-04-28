@@ -36,9 +36,11 @@ resource "proxmox_virtual_environment_vm" "vm" {
     bridge = var.network_bridge_1
   }
 
-  network_device {
-    bridge = var.network_bridge_2
-
+  dynamic "network_device" {
+    for_each = var.network_bridge_2 != null && var.network_bridge_2 != "" ? [1] : []
+    content {
+      bridge = var.network_bridge_2
+    }
   }
 
   initialization {
@@ -50,10 +52,13 @@ resource "proxmox_virtual_environment_vm" "vm" {
       }
     }
 
-    # ip_config for the second network_device (vmbr1)
-    ip_config {
-      ipv4 {
-        address = var.network_address_2
+    dynamic "ip_config" {
+      for_each = var.network_address_2 != null && var.network_address_2 != "" ? [1] : []
+      content {
+        # ip_config for the second network_device (vmbr1)
+        ipv4 {
+          address = var.network_address_2
+        }
       }
     }
 
