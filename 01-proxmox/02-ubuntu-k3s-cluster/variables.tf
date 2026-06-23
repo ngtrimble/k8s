@@ -159,9 +159,10 @@ variable "cloud_image_file_name" {
   type        = string
 }
 
-variable "ssh_public_key_path" {
-  description = "Path to the SSH public key file"
+variable "ssh_keys_state_path" {
+  description = "Path to the local Terraform state of the 01-ssh-keys module"
   type        = string
+  default     = "../01-ssh-keys/state/dev.tfstate"
 }
 
 variable "environment_file_datastore_id" {

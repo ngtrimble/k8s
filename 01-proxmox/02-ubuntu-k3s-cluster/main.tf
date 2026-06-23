@@ -30,7 +30,7 @@ locals {
     - name: ${var.vm_username}
       sudo: ALL=(ALL) NOPASSWD:ALL
       ssh_authorized_keys:
-        - ${trimspace(data.local_file.ssh_public_key.content)}
+        - ${trimspace(data.terraform_remote_state.ssh_keys.outputs.public_key_openssh)}
       shell: /bin/bash
   package_update: true
   package_upgrade: true
@@ -50,8 +50,11 @@ locals {
   EOF
 }
 
-data "local_file" "ssh_public_key" {
-  filename = var.ssh_public_key_path
+data "terraform_remote_state" "ssh_keys" {
+  backend = "local"
+  config = {
+    path = var.ssh_keys_state_path
+  }
 }
 
 module "virtual_machines" {
