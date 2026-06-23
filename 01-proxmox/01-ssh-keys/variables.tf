@@ -25,7 +25,7 @@ variable "proxmox_insecure" {
 variable "ssh_key_name" {
   description = "The name of the SSH key snippet to create on Proxmox"
   type        = string
-  default     = "proxmox-ssh-key.pub"
+  default     = "proxmox-ssh-key"
 }
 
 variable "ssh_key_algorithm" {
