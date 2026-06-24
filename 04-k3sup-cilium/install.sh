@@ -15,16 +15,19 @@ source env/$ENV.env
 
 export KUBECONFIG=$(pwd)/$ENV-kubeconfig
 
+K3S_SERVER_EXTRA_ARGS='--flannel-backend=none --disable-network-policy --disable-kube-proxy --disable servicelb --disable traefik --node-taint node.cilium.io/agent-not-ready=true:NoSchedule'
+K3S_AGENT_EXTRA_ARGS='--flannel-backend=none --node-taint node.cilium.io/agent-not-ready=true:NoSchedule'
+
 # Use k3sup to:
 # * Install K3S on the first server node using ssh
 # * --cluster flag uses etcd as the datastore for K3S, which is required for HA control plane nodes
 # * --tls-san flag adds the VIP as a Subject Alternative Name (SAN) to the TLS certificate used by the K3S API server
 k3sup install --cluster \
     --ip ${K3S_SERVER_NODES_IPS[0]} \
-    --tls-san ${K3S_SERVER_NODES_IPS[0]} \
+    --tls-san $K8S_HA_API_VIP \
     --user pveuser --ssh-key $SSH_KEY_PATH \
     --local-path $KUBECONFIG \
-    --k3s-extra-args '--flannel-backend=none --disable-network-policy --disable-kube-proxy --disable servicelb --disable traefik --node-taint node.cilium.io/agent-not-ready=true:NoSchedule'
+    --k3s-extra-args "$K3S_SERVER_EXTRA_ARGS"
 
 sleep 30
 
@@ -44,11 +47,13 @@ helm install cilium cilium/cilium --version $CILIUM_VERSION \
   --set devices=$ARP_INTERFACE
 
 for SERVER_NODE_IP in "${K3S_SERVER_NODES_IPS[@]:1}"; do
-  k3sup join --server --ip $SERVER_NODE_IP --server-ip ${K3S_SERVER_NODES_IPS[0]} --tls-san ${K3S_SERVER_NODES_IPS[0]} --user pveuser --ssh-key $SSH_KEY_PATH --k3s-extra-args '--flannel-backend=none --disable-network-policy --disable-kube-proxy --disable servicelb --disable traefik --node-taint node.cilium.io/agent-not-ready=true:NoSchedule'
+  k3sup join --server --ip $SERVER_NODE_IP --server-ip $K8S_HA_API_VIP --tls-san $K8S_HA_API_VIP \
+    --user pveuser --ssh-key $SSH_KEY_PATH --k3s-extra-args "$K3S_SERVER_EXTRA_ARGS"
 done
 
 for AGENT_NODE_IP in "${K3S_AGENT_NODES_IPS[@]}"; do
-  k3sup join --ip $AGENT_NODE_IP --server-ip ${K3S_SERVER_NODES_IPS[0]} --tls-san ${K3S_SERVER_NODES_IPS[0]} --user pveuser --ssh-key $SSH_KEY_PATH --k3s-extra-args '--flannel-backend=none --node-taint node.cilium.io/agent-not-ready=true:NoSchedule'
+  k3sup join --ip $AGENT_NODE_IP --server-ip $K8S_HA_API_VIP --tls-san $K8S_HA_API_VIP \
+    --user pveuser --ssh-key $SSH_KEY_PATH --k3s-extra-args "$K3S_AGENT_EXTRA_ARGS"
 done
 
 kubectl get nodes -o wide
