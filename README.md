@@ -28,16 +28,3 @@ topics:
 05 - Kuberetes Deployed Applications
 
 06 - Kubernetes Inception where things get weird and Kubernetes is used to manage Kubernetes. See also 03.
-
-## Status
-
-* 01-proxmox/01-packer is untested and unfinished
-
-* 01-proxmox/02-terraform/k3s-cluster creates a VM but does not automate installaton of k3s
-
-* 04-k3s/
-
-## TODO
-
-[ ] Figure out why hostname is not being set with cloud-init
-
