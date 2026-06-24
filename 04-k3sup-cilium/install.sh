@@ -24,11 +24,12 @@ k3sup install --cluster \
     --tls-san ${K3S_SERVER_NODES_IPS[0]} \
     --user pveuser --ssh-key $SSH_KEY_PATH \
     --local-path $KUBECONFIG \
-    --k3s-extra-args '--flannel-backend=none --disable-network-policy --disable-kube-proxy --node-taint node.cilium.io/agent-not-ready=true:NoSchedule'
+    --k3s-extra-args '--flannel-backend=none --disable-network-policy --disable-kube-proxy --disable servicelb --disable traefik --node-taint node.cilium.io/agent-not-ready=true:NoSchedule'
 
 sleep 30
 
 helm repo add cilium https://helm.cilium.io/
+helm repo update
 
 helm install cilium cilium/cilium --version $CILIUM_VERSION \
   --namespace kube-system \
@@ -46,13 +47,10 @@ for SERVER_NODE_IP in "${K3S_SERVER_NODES_IPS[@]:1}"; do
   k3sup join --server --ip $SERVER_NODE_IP --server-ip ${K3S_SERVER_NODES_IPS[0]} --tls-san ${K3S_SERVER_NODES_IPS[0]} --user pveuser --ssh-key $SSH_KEY_PATH --k3s-extra-args '--flannel-backend=none --disable-network-policy --disable-kube-proxy --disable servicelb --disable traefik --node-taint node.cilium.io/agent-not-ready=true:NoSchedule'
 done
 
-sleep 10
-kubectl rollout status -n kube-system --timeout 60s daemonset/kube-vip-ds
-
 for AGENT_NODE_IP in "${K3S_AGENT_NODES_IPS[@]}"; do
   k3sup join --ip $AGENT_NODE_IP --server-ip ${K3S_SERVER_NODES_IPS[0]} --tls-san ${K3S_SERVER_NODES_IPS[0]} --user pveuser --ssh-key $SSH_KEY_PATH --k3s-extra-args '--flannel-backend=none --node-taint node.cilium.io/agent-not-ready=true:NoSchedule'
 done
 
-kubectl get nodes
+kubectl get nodes -o wide
 
 echo -e "Set your KUBECONFIG environment variable: \n\n\texport KUBECONFIG=$(pwd)/$ENV-kubeconfig\n"

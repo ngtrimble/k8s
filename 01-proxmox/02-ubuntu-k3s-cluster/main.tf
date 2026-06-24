@@ -19,11 +19,13 @@ provider "proxmox" {
 }
 
 locals {
-  cloud_config = <<-EOF
+  # One cloud-config per node so each gets a unique hostname matching its VM name.
+  cloud_config = [
+    for i in range(var.node_count) : <<-EOF
   #cloud-config
-  # The '.' at the end of the fqdn is required. If it's not included, cloud-init will fail to set the hostname 
+  # The '.' at the end of the fqdn is required. If it's not included, cloud-init will fail to set the hostname
   # and the VM will end up with a default hostname like 'localhost'.
-  fqdn: ${var.vm_name}.
+  fqdn: ${var.vm_name}${i + 1}.
   timezone: ${var.vm_timezone}
   users:
     - default
@@ -48,6 +50,7 @@ locals {
     timeout: 30
     condition: true
   EOF
+  ]
 }
 
 data "terraform_remote_state" "ssh_keys" {
@@ -85,5 +88,5 @@ module "virtual_machines" {
   cloud_image_datastore_id      = var.cloud_image_datastore_id
   environment_file_datastore_id = var.environment_file_datastore_id
   environment_file_node_name    = var.environment_file_node_name
-  cloud_config                  = local.cloud_config
+  cloud_config                  = local.cloud_config[count.index]
 }
